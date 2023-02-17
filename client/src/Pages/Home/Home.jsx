@@ -6,7 +6,7 @@
 
 import React, { useContext, useEffect } from "react";
 import Header from "../../Components/Header/Header";
-import Map from "../../Components/Map/Map";
+import MyMap from "../../Components/Map/Map";
 import SideBar from "../../Components/SideBar/SideBar";
 import { GlobalStoreContext } from "../../Context/store";
 
@@ -14,10 +14,12 @@ const Home = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <div>
-      <Header />
-      <Map />
-      <SideBar />
+    <div className="container">
+      <Header className="header" />
+      <div className="main">
+        <MyMap />
+        <SideBar />
+      </div>
     </div>
   );
 };
