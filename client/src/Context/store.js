@@ -14,6 +14,7 @@ function GlobalStoreContextProvider(props) {
   // fill in with store variables
   const [store, setStore] = useState({
     currentState: null,
+    currentDistrict: null,
   });
 
   //BEGINNNING OF STORE FUNCTIONS: TEMPLATE BELOW
@@ -25,6 +26,10 @@ function GlobalStoreContextProvider(props) {
 
   store.setCurrentState = function (state) {
     setStore({ ...store, currentState: state });
+  };
+
+  store.setCurrentDistrict = function (district) {
+    setStore({ ...store, currentDistrict: district });
   };
 
   //should not need to edit below

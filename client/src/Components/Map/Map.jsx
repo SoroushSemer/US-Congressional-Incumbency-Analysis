@@ -14,6 +14,7 @@ import {
   Marker,
   Popup,
   GeoJSON,
+  ZoomControl,
 } from "react-leaflet";
 import Col from "react-bootstrap/Col";
 
@@ -40,9 +41,8 @@ const Map = () => {
     return null;
   }
 
-
-
   function MyMap() {
+    var styling = { color: "blue" };
     return (
       <Col xs={7}>
         <MapContainer center={coords} zoom={zoom} scrollWheelZoom={false}>
@@ -51,10 +51,72 @@ const Map = () => {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           <MyComponent />
-          <GeoJSON data={arizonaJSON} />
-          <GeoJSON data={marylandJSON} />
-          <GeoJSON data={louisianaJSON} />
+          <GeoJSON
+            style={{ fillColor: "blue" }}
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                mouseover: (e) => {
+                  e.target.setStyle({ fillColor: "red" });
+                },
+                mouseout: (e) => {
+                  e.target.setStyle({ fillColor: "blue" });
+                },
+                click: (e) => {
+                  e.target.setStyle({ fillColor: "green" });
+                  store.setCurrentDistrict(feature.properties.district);
+                },
+              });
+              layer.bindTooltip(feature.properties.district, {
+                // permanent: true,
+                direction: "left",
+                offset: [-10, 0],
+                // className: "number-label",
+              });
+            }}
+            data={arizonaJSON}
+          />
+          <GeoJSON
+            style={{ fillColor: "blue" }}
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                mouseover: (e) => {
+                  e.target.setStyle({ fillColor: "red" });
+                },
+                mouseout: (e) => {
+                  e.target.setStyle({ fillColor: "blue" });
+                },
+              });
 
+              layer.bindTooltip(feature.properties.district, {
+                // permanent: true,
+                direction: "left",
+                offset: [-10, 0],
+                // className: "number-label",
+              });
+            }}
+            data={marylandJSON}
+          />
+          <GeoJSON
+            style={{ fillColor: "blue" }}
+            onEachFeature={(feature, layer) => {
+              layer.on({
+                mouseover: (e) => {
+                  e.target.setStyle({ fillColor: "red" });
+                },
+                mouseout: (e) => {
+                  e.target.setStyle({ fillColor: "blue" });
+                },
+              });
+
+              layer.bindTooltip(feature.properties.district, {
+                // permanent: true,
+                direction: "left",
+                offset: [-10, 0],
+                // className: "number-label",
+              });
+            }}
+            data={louisianaJSON}
+          />
           {/* <Marker
             position={
               store && store.currentState

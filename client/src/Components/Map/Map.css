@@ -1,4 +1,6 @@
 .leaflet-container {
   /* width: 50%; */
   height: 85vh;
+  background-color: darkslategray;
+  color: darkslategray;
 }

@@ -2,42 +2,47 @@
   "arizona": {
     "name": "Arizona",
     "coords": [34, -111],
-    "zoom": 6,
+    "zoom": 6.5,
     "incumbents": [
       {
         "name": "John Doe",
         "party": "Democrat",
         "electionResult": true,
         "geoVar": "Urban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 1
       },
       {
         "name": "Jane Smith",
         "party": "Republican",
         "electionResult": false,
         "geoVar": "Rural",
-        "populationVar": "Low"
+        "populationVar": "Low",
+        "district": 3
       },
       {
         "name": "Bill Johnson",
         "party": "Independent",
         "electionResult": true,
         "geoVar": "Suburban",
-        "populationVar": "Medium"
+        "populationVar": "Medium",
+        "district": 4
       },
       {
         "name": "Sarah Williams",
         "party": "Green",
         "electionResult": false,
         "geoVar": "Exurban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 6
       },
       {
         "name": "Mary Jones",
         "party": "Libertarian",
         "electionResult": true,
         "geoVar": "Urban",
-        "populationVar": "Low"
+        "populationVar": "Low",
+        "district": 2
       }
     ]
   },
@@ -51,35 +56,40 @@
         "party": "Democrat",
         "electionResult": true,
         "geoVar": "Suburban",
-        "populationVar": "Medium"
+        "populationVar": "Medium",
+        "district": 2
       },
       {
         "name": "Tom Taylor",
         "party": "Republican",
         "electionResult": false,
         "geoVar": "Exurban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 4
       },
       {
         "name": "Kate Harris",
         "party": "Independent",
         "electionResult": true,
         "geoVar": "Urban",
-        "populationVar": "Low"
+        "populationVar": "Low",
+        "district": 3
       },
       {
         "name": "Mike Brown",
         "party": "Green",
         "electionResult": false,
         "geoVar": "Rural",
-        "populationVar": "Medium"
+        "populationVar": "Medium",
+        "district": 5
       },
       {
         "name": "Joe Smith",
         "party": "Libertarian",
         "electionResult": true,
         "geoVar": "Suburban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 7
       }
     ]
   },
@@ -93,35 +103,40 @@
         "party": "Democrat",
         "electionResult": false,
         "geoVar": "Exurban",
-        "populationVar": "Low"
+        "populationVar": "Low",
+        "district": 1
       },
       {
         "name": "Richard Davis",
         "party": "Republican",
         "electionResult": true,
         "geoVar": "Urban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 2
       },
       {
         "name": "Sarah Miller",
         "party": "Independent",
         "electionResult": false,
         "geoVar": "Rural",
-        "populationVar": "Medium"
+        "populationVar": "Medium",
+        "district": 3
       },
       {
         "name": "Mark Johnson",
         "party": "Green",
         "electionResult": true,
         "geoVar": "Suburban",
-        "populationVar": "Low"
+        "populationVar": "Low",
+        "district": 5
       },
       {
         "name": "Amy Anderson",
         "party": "Libertarian",
         "electionResult": false,
         "geoVar": "Exurban",
-        "populationVar": "High"
+        "populationVar": "High",
+        "district": 9
       }
     ]
   }

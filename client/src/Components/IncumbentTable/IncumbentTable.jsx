@@ -75,6 +75,7 @@ export default function IncumbentTable() {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
+            <TableCell>District</TableCell>
             <TableCell>Name</TableCell>
             <TableCell align="right">Party</TableCell>
             <TableCell align="right">2022 Election Result</TableCell>
@@ -84,17 +85,26 @@ export default function IncumbentTable() {
         </TableHead>
         <TableBody>
           {store && store.currentState ? (
-            store.currentState.incumbents.map((state) => (
-              <TableRow key={state.name}>
+            store.currentState.incumbents.map((incumbent) => (
+              <TableRow
+                key={incumbent.district}
+                onClick={() => store.setCurrentDistrict(incumbent.district)}
+                style={
+                  store.currentDistrict == incumbent.district
+                    ? { backgroundColor: "blue" }
+                    : {}
+                }
+              >
                 <TableCell component="th" scope="row">
-                  {state.name}
+                  {incumbent.district}
                 </TableCell>
-                <TableCell align="right">{state.party}</TableCell>
+                <TableCell align="right">{incumbent.name}</TableCell>
+                <TableCell align="right">{incumbent.party}</TableCell>
                 <TableCell align="right">
-                  {state.electionResult ? "Win" : "Loss"}
+                  {incumbent.electionResult ? "Win" : "Loss"}
                 </TableCell>
-                <TableCell align="right">{state.geoVar}</TableCell>
-                <TableCell align="right">{state.populationVar}</TableCell>
+                <TableCell align="right">{incumbent.geoVar}</TableCell>
+                <TableCell align="right">{incumbent.populationVar}</TableCell>
               </TableRow>
             ))
           ) : (
