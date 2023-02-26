@@ -7,16 +7,16 @@
 import React, { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../../Context/store";
 import IncumbentTable from "../IncumbentTable/IncumbentTable";
-
+import Col from "react-bootstrap/Col";
 const SideBar = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <aside class="sidebar">
-      <h3>Sidebar</h3>
-      <p>This is the sidebar.</p>
+    // <aside class="sidebar">
+    <Col xs={5}>
       <IncumbentTable />
-    </aside>
+    </Col>
+    // </aside>
   );
 };
 

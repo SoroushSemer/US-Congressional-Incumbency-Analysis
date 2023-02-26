@@ -7,7 +7,21 @@ import "./Map.css";
 
 import React, { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../../Context/store";
-import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  useMap,
+  Marker,
+  Popup,
+  GeoJSON,
+} from "react-leaflet";
+import Col from "react-bootstrap/Col";
+
+// const arizonaGeoJSON = require("../../Data/gz_2010_us_500_11_5m.json");
+
+const marylandJSON = require("../../Data/maryland.json");
+const arizonaJSON = require("../../Data/arizona.json");
+const louisianaJSON = require("../../Data/louisiana.json");
 
 const Map = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -26,15 +40,21 @@ const Map = () => {
     return null;
   }
 
+
+
   function MyMap() {
     return (
-      <div class="map">
+      <Col xs={7}>
         <MapContainer center={coords} zoom={zoom} scrollWheelZoom={false}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           <MyComponent />
+          <GeoJSON data={arizonaJSON} />
+          <GeoJSON data={marylandJSON} />
+          <GeoJSON data={louisianaJSON} />
+
           {/* <Marker
             position={
               store && store.currentState
@@ -55,7 +75,7 @@ const Map = () => {
             </Popup>
           </Marker> */}
         </MapContainer>
-      </div>
+      </Col>
     );
   }
   return MyMap();

@@ -9,18 +9,23 @@ import Header from "../../Components/Header/Header";
 import MyMap from "../../Components/Map/Map";
 import SideBar from "../../Components/SideBar/SideBar";
 import { GlobalStoreContext } from "../../Context/store";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const Home = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <div className="container">
-      <Header className="header" />
-      <div className="main">
+    <Container>
+      <Row>
+        <Header className="header" />
+      </Row>
+      <Row>
         <MyMap />
         <SideBar />
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 };
 
