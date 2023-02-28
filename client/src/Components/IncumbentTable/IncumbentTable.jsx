@@ -71,16 +71,19 @@ export default function IncumbentTable() {
   const { store } = useContext(GlobalStoreContext);
   return (
     <TableContainer component={Paper}>
-      <h4>Incumbents</h4>
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>District</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Party</TableCell>
-            <TableCell align="right">2022 Election Result</TableCell>
-            <TableCell align="right">Geographic Variation</TableCell>
-            <TableCell align="right">Population Variation</TableCell>
+            <TableCell width={200} align="center">
+              Name
+            </TableCell>
+            <TableCell align="center">Party</TableCell>
+            <TableCell align="center">2022</TableCell>
+            <TableCell align="center" width={100}>
+              Geographic Variation
+            </TableCell>
+            <TableCell align="center">Population Variation</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -88,23 +91,29 @@ export default function IncumbentTable() {
             store.currentState.incumbents.map((incumbent) => (
               <TableRow
                 key={incumbent.district}
-                onClick={() => store.setCurrentDistrict(incumbent.district)}
+                onClick={() => {
+                  if (store.currentDistrict != incumbent.district) {
+                    store.setCurrentDistrict(incumbent.district);
+                  } else {
+                    store.setCurrentDistrict(null);
+                  }
+                }}
                 style={
                   store.currentDistrict == incumbent.district
-                    ? { backgroundColor: "blue" }
+                    ? { backgroundColor: "pink" }
                     : {}
                 }
               >
                 <TableCell component="th" scope="row">
                   {incumbent.district}
                 </TableCell>
-                <TableCell align="right">{incumbent.name}</TableCell>
-                <TableCell align="right">{incumbent.party}</TableCell>
-                <TableCell align="right">
+                <TableCell align="left">{incumbent.name}</TableCell>
+                <TableCell align="center">{incumbent.party}</TableCell>
+                <TableCell align="center">
                   {incumbent.electionResult ? "Win" : "Loss"}
                 </TableCell>
-                <TableCell align="right">{incumbent.geoVar}</TableCell>
-                <TableCell align="right">{incumbent.populationVar}</TableCell>
+                <TableCell align="center">{incumbent.geoVar}</TableCell>
+                <TableCell align="center">{incumbent.populationVar}</TableCell>
               </TableRow>
             ))
           ) : (

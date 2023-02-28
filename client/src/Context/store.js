@@ -25,11 +25,38 @@ function GlobalStoreContextProvider(props) {
     */
 
   store.setCurrentState = function (state) {
-    setStore({ ...store, currentState: state });
+    setStore({ ...store, currentState: state, currentDistrict: null });
   };
 
   store.setCurrentDistrict = function (district) {
-    setStore({ ...store, currentDistrict: district });
+    setStore({
+      ...store,
+      currentState: store.currentState,
+      currentDistrict: district,
+    });
+  };
+
+  store.getCurrentIncumbent = function () {
+    if (store.currentDistrict == null || store.currentState == null) {
+      return null;
+    }
+    for (const incumbent of store.currentState.incumbents) {
+      if (incumbent.district == store.currentDistrict) {
+        return incumbent;
+      }
+    }
+    return null;
+  };
+  store.getIncumbent = function (district) {
+    if (district == null || store.currentState == null) {
+      return null;
+    }
+    for (const incumbent of store.currentState.incumbents) {
+      if (incumbent.district == district) {
+        return incumbent;
+      }
+    }
+    return null;
   };
 
   //should not need to edit below

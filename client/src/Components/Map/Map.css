@@ -4,3 +4,16 @@
   background-color: darkslategray;
   color: darkslategray;
 }
+.color-key {
+  margin: 10px;
+}
+
+.color-key-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.color-key-item p {
+  margin-left: 10px;
+}

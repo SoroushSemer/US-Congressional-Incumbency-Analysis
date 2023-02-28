@@ -10,7 +10,9 @@
         "electionResult": true,
         "geoVar": "Urban",
         "populationVar": "High",
-        "district": 1
+        "district": 1,
+        "popVar2020": [23, 17, 32, 21, 7],
+        "popVar2022": [14, 27, 31, 27, 21]
       },
       {
         "name": "Jane Smith",
@@ -18,7 +20,9 @@
         "electionResult": false,
         "geoVar": "Rural",
         "populationVar": "Low",
-        "district": 3
+        "district": 3,
+        "popVar2020": [15, 22, 30, 31, 12],
+        "popVar2022": [10, 20, 42, 19, 29]
       },
       {
         "name": "Bill Johnson",
@@ -26,7 +30,9 @@
         "electionResult": true,
         "geoVar": "Suburban",
         "populationVar": "Medium",
-        "district": 4
+        "district": 4,
+        "popVar2020": [18, 24, 38, 17, 3],
+        "popVar2022": [25, 17, 30, 21, 17]
       },
       {
         "name": "Sarah Williams",
@@ -34,7 +40,9 @@
         "electionResult": false,
         "geoVar": "Exurban",
         "populationVar": "High",
-        "district": 6
+        "district": 6,
+        "popVar2020": [26, 14, 19, 30, 11],
+        "popVar2022": [20, 18, 35, 22, 25]
       },
       {
         "name": "Mary Jones",
@@ -42,7 +50,9 @@
         "electionResult": true,
         "geoVar": "Urban",
         "populationVar": "Low",
-        "district": 2
+        "district": 2,
+        "popVar2020": [20, 18, 26, 24, 12],
+        "popVar2022": [14, 25, 33, 24, 24]
       }
     ]
   },
@@ -57,7 +67,9 @@
         "electionResult": true,
         "geoVar": "Suburban",
         "populationVar": "Medium",
-        "district": 2
+        "district": 2,
+        "popVar2020": [17, 25, 30, 20, 8],
+        "popVar2022": [20, 17, 20, 37, 26]
       },
       {
         "name": "Tom Taylor",
@@ -65,7 +77,9 @@
         "electionResult": false,
         "geoVar": "Exurban",
         "populationVar": "High",
-        "district": 4
+        "district": 4,
+        "popVar2020": [31, 14, 17, 29, 9],
+        "popVar2022": [11, 25, 34, 20, 30]
       },
       {
         "name": "Kate Harris",
@@ -73,7 +87,9 @@
         "electionResult": true,
         "geoVar": "Urban",
         "populationVar": "Low",
-        "district": 3
+        "district": 3,
+        "popVar2020": [23, 15, 29, 23, 10],
+        "popVar2022": [15, 30, 31, 19, 25]
       },
       {
         "name": "Mike Brown",
@@ -81,7 +97,9 @@
         "electionResult": false,
         "geoVar": "Rural",
         "populationVar": "Medium",
-        "district": 5
+        "district": 5,
+        "popVar2020": [17, 18, 34, 26, 5],
+        "popVar2022": [13, 21, 39, 24, 23]
       },
       {
         "name": "Joe Smith",
@@ -89,13 +107,15 @@
         "electionResult": true,
         "geoVar": "Suburban",
         "populationVar": "High",
-        "district": 7
+        "district": 7,
+        "popVar2020": [30, 16, 23, 24, 7],
+        "popVar2022": [19, 22, 37, 19, 25]
       }
     ]
   },
   "maryland": {
     "name": "Maryland",
-    "coords": [39, -77],
+    "coords": [39, -77.4],
     "zoom": 7.5,
     "incumbents": [
       {
@@ -104,7 +124,9 @@
         "electionResult": false,
         "geoVar": "Exurban",
         "populationVar": "Low",
-        "district": 1
+        "district": 1,
+        "popVar2020": [14, 20, 30, 30, 6],
+        "popVar2022": [21, 17, 24, 25, 13]
       },
       {
         "name": "Richard Davis",
@@ -112,7 +134,9 @@
         "electionResult": true,
         "geoVar": "Urban",
         "populationVar": "High",
-        "district": 2
+        "district": 2,
+        "popVar2020": [30, 14, 20, 27, 9],
+        "popVar2022": [11, 27, 36, 18, 28]
       },
       {
         "name": "Sarah Miller",
@@ -120,7 +144,9 @@
         "electionResult": false,
         "geoVar": "Rural",
         "populationVar": "Medium",
-        "district": 3
+        "district": 3,
+        "popVar2020": [17, 23, 27, 27, 6],
+        "popVar2022": [13, 20, 36, 23, 18]
       },
       {
         "name": "Mark Johnson",
@@ -128,7 +154,9 @@
         "electionResult": true,
         "geoVar": "Suburban",
         "populationVar": "Low",
-        "district": 5
+        "district": 5,
+        "popVar2020": [14, 22, 32, 25, 7],
+        "popVar2022": [17, 25, 27, 25, 16]
       },
       {
         "name": "Amy Anderson",
@@ -136,7 +164,9 @@
         "electionResult": false,
         "geoVar": "Exurban",
         "populationVar": "High",
-        "district": 9
+        "district": 8,
+        "popVar2020": [25, 15, 21, 30, 9],
+        "popVar2022": [14, 21, 37, 18, 30]
       }
     ]
   }

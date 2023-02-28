@@ -5,18 +5,11 @@
 // */
 import "./Map.css";
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { GlobalStoreContext } from "../../Context/store";
-import {
-  MapContainer,
-  TileLayer,
-  useMap,
-  Marker,
-  Popup,
-  GeoJSON,
-  ZoomControl,
-} from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import Col from "react-bootstrap/Col";
+import State from "../State/State";
 
 // const arizonaGeoJSON = require("../../Data/gz_2010_us_500_11_5m.json");
 
@@ -42,100 +35,23 @@ const Map = () => {
   }
 
   function MyMap() {
-    var styling = { color: "blue" };
     return (
-      <Col xs={7}>
+      <Col xs={6}>
         <MapContainer center={coords} zoom={zoom} scrollWheelZoom={false}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           <MyComponent />
-          <GeoJSON
-            style={{ fillColor: "blue" }}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                mouseover: (e) => {
-                  e.target.setStyle({ fillColor: "red" });
-                },
-                mouseout: (e) => {
-                  e.target.setStyle({ fillColor: "blue" });
-                },
-                click: (e) => {
-                  e.target.setStyle({ fillColor: "green" });
-                  store.setCurrentDistrict(feature.properties.district);
-                },
-              });
-              layer.bindTooltip(feature.properties.district, {
-                // permanent: true,
-                direction: "left",
-                offset: [-10, 0],
-                // className: "number-label",
-              });
-            }}
-            data={arizonaJSON}
-          />
-          <GeoJSON
-            style={{ fillColor: "blue" }}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                mouseover: (e) => {
-                  e.target.setStyle({ fillColor: "red" });
-                },
-                mouseout: (e) => {
-                  e.target.setStyle({ fillColor: "blue" });
-                },
-              });
-
-              layer.bindTooltip(feature.properties.district, {
-                // permanent: true,
-                direction: "left",
-                offset: [-10, 0],
-                // className: "number-label",
-              });
-            }}
-            data={marylandJSON}
-          />
-          <GeoJSON
-            style={{ fillColor: "blue" }}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                mouseover: (e) => {
-                  e.target.setStyle({ fillColor: "red" });
-                },
-                mouseout: (e) => {
-                  e.target.setStyle({ fillColor: "blue" });
-                },
-              });
-
-              layer.bindTooltip(feature.properties.district, {
-                // permanent: true,
-                direction: "left",
-                offset: [-10, 0],
-                // className: "number-label",
-              });
-            }}
-            data={louisianaJSON}
-          />
-          {/* <Marker
-            position={
-              store && store.currentState
-                ? {
-                    lat: store.currentState.coords[0],
-                    lng: store.currentState.coords[1],
-                  }
-                : {
-                    lat: 0,
-                    lng: 0,
-                  }
-            }
-          >
-            <Popup>
-              A pretty CSS3 popup.
-              <br />
-              Easily customizable.
-            </Popup>
-          </Marker> */}
+          {store && store.currentState ? (
+            <div>
+              <State data={arizonaJSON} state="Arizona" />
+              <State data={marylandJSON} state="Maryland" />
+              <State data={louisianaJSON} state="Louisiana" />
+            </div>
+          ) : (
+            <div />
+          )}
         </MapContainer>
       </Col>
     );
