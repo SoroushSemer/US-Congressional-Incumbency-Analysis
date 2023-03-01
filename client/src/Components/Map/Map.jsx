@@ -13,9 +13,11 @@ import State from "../State/State";
 
 // const arizonaGeoJSON = require("../../Data/gz_2010_us_500_11_5m.json");
 
-const marylandJSON = require("../../Data/maryland.json");
-const arizonaJSON = require("../../Data/arizona.json");
-const louisianaJSON = require("../../Data/louisiana.json");
+const maps = require("../../Data/maps.json");
+
+// const marylandJSON = require("../../Data/districts/maryland2010.json");
+// const arizonaJSON = require("../../Data/districts/arizona2010.json");
+// const louisianaJSON = require("../../Data/districts/louisiana2010.json");
 
 const Map = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -43,15 +45,26 @@ const Map = () => {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           <MyComponent />
+
           {store && store.currentState ? (
-            <div>
-              <State data={arizonaJSON} state="Arizona" />
-              <State data={marylandJSON} state="Maryland" />
-              <State data={louisianaJSON} state="Louisiana" />
-            </div>
+            maps.Maps.map((map) => {
+              if (store.getMap(map.name) != -1) {
+                const arizonaJSON = require("../../Data/" + map.arizona);
+                const marylandJSON = require("../../Data/" + map.maryland);
+                const louisianaJSON = require("../../Data/" + map.louisiana);
+                return (
+                  <div>
+                    <State data={arizonaJSON} state="Arizona" />
+                    <State data={marylandJSON} state="Maryland" />
+                    <State data={louisianaJSON} state="Louisiana" />
+                  </div>
+                );
+              }
+            })
           ) : (
             <div />
           )}
+          
         </MapContainer>
       </Col>
     );

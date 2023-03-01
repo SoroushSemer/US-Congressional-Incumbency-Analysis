@@ -15,6 +15,8 @@ function GlobalStoreContextProvider(props) {
   const [store, setStore] = useState({
     currentState: null,
     currentDistrict: null,
+    currentMaps: ["2010 Districts"],
+    currentMapSubType: [],
   });
 
   //BEGINNNING OF STORE FUNCTIONS: TEMPLATE BELOW
@@ -59,6 +61,42 @@ function GlobalStoreContextProvider(props) {
     return null;
   };
 
+  store.toggleMap = function (mapId) {
+    var newArray = store.currentMaps;
+    var index = newArray.indexOf(mapId);
+    if (index < 0) {
+      newArray.push(mapId);
+      setStore({ ...store, currentMaps: newArray });
+    } else {
+      newArray.splice(index, 1);
+      setStore({ ...store, currentMaps: newArray });
+    }
+  };
+  store.clearMaps = function () {
+    setStore({ ...store, currentMaps: [], currentMapSubType: [] });
+  };
+  store.getMap = function (mapId) {
+    var index = store.currentMaps.indexOf(mapId);
+    return index;
+  };
+  store.toggleMapSubType = function (subtype) {
+    var newArray = store.currentMapSubType;
+    var index = newArray.indexOf(subtype);
+    if (index < 0) {
+      newArray.push(subtype);
+      setStore({ ...store, currentMapSubType: newArray });
+    } else {
+      newArray.splice(index, 1);
+      setStore({ ...store, currentMapSubType: newArray });
+    }
+  };
+  store.clearMapSubType = function () {
+    setStore({ ...store, currentMapSubType: [] });
+  };
+  store.getMapSubType = function (subtype) {
+    var index = store.currentMapSubType.indexOf(subtype);
+    return index;
+  };
   //should not need to edit below
   return (
     <GlobalStoreContext.Provider
