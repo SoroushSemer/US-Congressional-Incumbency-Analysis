@@ -1,7 +1,7 @@
 {
   "arizona": {
     "name": "Arizona",
-    "coords": [34, -108],
+    "coords": [34, -107],
     "zoom": 6.5,
     "incumbents": [
       {
@@ -58,7 +58,7 @@
   },
   "louisiana": {
     "name": "Louisiana",
-    "coords": [31, -87],
+    "coords": [31, -87.5],
     "zoom": 7,
     "incumbents": [
       {

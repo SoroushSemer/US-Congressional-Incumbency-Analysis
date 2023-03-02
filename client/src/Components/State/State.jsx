@@ -16,13 +16,13 @@ const State = (props) => {
         ) {
           return { fillColor: "red", color: "red" };
         } else if (store.currentState) {
-          var color = "green";
+          var color = "white";
           for (const incumbent of store.currentState.incumbents) {
             if (incumbent.district == feature.properties.district) {
-              color = "blue";
+              color = "green";
             }
           }
-          return { fillColor: color, color: color };
+          return { fillColor: color, color: "blue" };
         }
       }}
       onEachFeature={(feature, layer) => {

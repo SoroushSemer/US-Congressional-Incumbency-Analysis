@@ -142,9 +142,17 @@ const SideBar = () => {
                 <Tab eventKey="contact" title="Summary">
                   <h5>District #{store.currentDistrict}</h5>
                   <ul>
-                    <li>Area: {Math.floor(Math.random() * 1000)} sq. mi.</li>
-                    <li>Population: {Math.floor(Math.random() * 100000)}</li>
-                    <li>Winner: John Doe</li>
+                    <li>
+                      <strong>Area: </strong>
+                      {Math.floor(Math.random() * 1000)} sq. mi.
+                    </li>
+                    <li>
+                      <strong>Population: </strong>
+                      {Math.floor(Math.random() * 100000)}
+                    </li>
+                    <li>
+                      <strong>Winner: </strong>John Doe
+                    </li>
                   </ul>
                 </Tab>
                 <Tab eventKey="home" title="Geographic Variation">
@@ -200,6 +208,29 @@ const SideBar = () => {
           </Tab>
 
           <Tab eventKey="second" title="Ensemble">
+            <h4 className="mt-2">Ensemble Summary</h4>
+            <ul>
+              <li>
+                <strong>Districts: </strong>
+                {Math.floor(Math.random() * 9) + 1}
+              </li>
+              <li>
+                <strong>Avg Population per district:</strong>{" "}
+                {Math.floor(Math.random() * 10000)}
+              </li>
+              <li>
+                <strong>Avg District Size:</strong>{" "}
+                {Math.floor(Math.random() * 1000)} sq. mi.
+              </li>
+              <li>
+                <strong>Population Variation: </strong>
+                {Math.floor(Math.random() * 2000) - 1000}
+              </li>
+              <li>
+                <strong>Geographic Variation: </strong>
+                {Math.floor(Math.random() * 100)}%
+              </li>
+            </ul>
             <h4 className="mt-2">Ensemble Analysis</h4>
             <ReactApexChart
               options={options}
