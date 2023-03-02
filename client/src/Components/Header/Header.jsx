@@ -27,7 +27,16 @@ const Header = () => {
     <Container className="w-100 mt-3">
       <Row>
         <Col xs={6}>
-          <h2>US Congressional Incumbent Analysis</h2>
+          <h3>
+            <img
+              src="https://th.bing.com/th/id/R.63c10a159449db7c79783bfc32b4cb38?rik=ZsmmieKK%2b%2bmpsw&pid=ImgRaw&r=0"
+              width="100px"
+              style={{borderRadius:"50%"}}
+            />
+            <span className="mx-3 inline">
+              US Congressional Incumbent Analysis
+            </span>
+          </h3>
         </Col>
         <Col xs={2}>
           <Dropdown>
