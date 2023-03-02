@@ -9,6 +9,94 @@ import { GlobalStoreContext } from "../../Context/store";
 import IncumbentTable from "../IncumbentTable/IncumbentTable";
 import Col from "react-bootstrap/Col";
 import Chart from "react-apexcharts";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
+import ReactApexChart from "react-apexcharts";
+import Nav from "react-bootstrap/Nav";
+import Row from "react-bootstrap/Row";
+
+const series = [
+  {
+    name: "box",
+    type: "boxPlot",
+    data: [
+      {
+        x: new Date("2017-01-01").getTime(),
+        y: [54, 66, 69, 75, 88],
+      },
+      {
+        x: new Date("2018-01-01").getTime(),
+        y: [43, 65, 69, 76, 81],
+      },
+      {
+        x: new Date("2019-01-01").getTime(),
+        y: [31, 39, 45, 51, 59],
+      },
+      {
+        x: new Date("2020-01-01").getTime(),
+        y: [39, 46, 55, 65, 71],
+      },
+      {
+        x: new Date("2021-01-01").getTime(),
+        y: [29, 31, 35, 39, 44],
+      },
+    ],
+  },
+  {
+    name: "outliers",
+    type: "scatter",
+    data: [
+      {
+        x: new Date("2017-01-01").getTime(),
+        y: 32,
+      },
+      {
+        x: new Date("2018-01-01").getTime(),
+        y: 25,
+      },
+      {
+        x: new Date("2019-01-01").getTime(),
+        y: 64,
+      },
+      {
+        x: new Date("2020-01-01").getTime(),
+        y: 27,
+      },
+      {
+        x: new Date("2020-01-01").getTime(),
+        y: 78,
+      },
+      {
+        x: new Date("2021-01-01").getTime(),
+        y: 15,
+      },
+    ],
+  },
+];
+
+const options = {
+  chart: {
+    type: "boxPlot",
+    height: 350,
+  },
+  colors: ["#008FFB", "#FEB019"],
+  title: {
+    text: "BoxPlot - Scatter Chart",
+    align: "left",
+  },
+  xaxis: {
+    type: "datetime",
+    tooltip: {
+      formatter: function (val) {
+        return new Date(val).getFullYear();
+      },
+    },
+  },
+  tooltip: {
+    shared: false,
+    intersect: true,
+  },
+};
 
 const SideBar = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -30,37 +118,97 @@ const SideBar = () => {
 
   return (
     // <aside class="sidebar">
-    <Col xs={6}>
+    <Col xs={store && store.currentState ? 6 : 0}>
+      <h2 style={{ textAlign: "center" }}>
+        {store && store.currentState ? store.currentState.name : ""}
+      </h2>
       {store && store.currentState ? (
-        <div>
-          <h4>Incumbent Table</h4>
-          <IncumbentTable />
-        </div>
-      ) : (
-        <div />
-      )}
-      {store && store.currentDistrict ? (
-        <div>
-          <h4 className="mt-3">
-            Population Variation from 2020 to 2022 for{" "}
-            {store.getCurrentIncumbent().name}
-          </h4>
-          <Chart
-            options={options}
-            series={[
-              {
-                name: "2020",
-                data: store.getCurrentIncumbent().popVar2020,
-              },
-              {
-                name: "2022",
-                data: store.getCurrentIncumbent().popVar2022,
-              },
-            ]}
-            type="bar"
-            width={"100%"}
-          />
-        </div>
+        <Tabs>
+          <Tab eventKey="first" title="Incumbent">
+            {store && store.currentState ? (
+              <div className="mt-2">
+                <h4>Incumbent Table</h4>
+                <IncumbentTable />
+              </div>
+            ) : (
+              <div />
+            )}
+            {store && store.currentDistrict ? (
+              <Tabs
+                defaultActiveKey="contact"
+                id="uncontrolled-tab-example"
+                className="mb-3 mt-2"
+              >
+                <Tab eventKey="contact" title="Summary">
+                  <h5>District #{store.currentDistrict}</h5>
+                  <ul>
+                    <li>Area: {Math.floor(Math.random() * 1000)} sq. mi.</li>
+                    <li>Population: {Math.floor(Math.random() * 100000)}</li>
+                    <li>Winner: John Doe</li>
+                  </ul>
+                </Tab>
+                <Tab eventKey="home" title="Geographic Variation">
+                  <div>
+                    <h4 className="mt-3">
+                      Geographic Variation from 2020 to 2022 for{" "}
+                      {store.getCurrentIncumbent().name}
+                    </h4>
+                    <Chart
+                      options={options}
+                      series={[
+                        {
+                          name: "2020",
+                          data: store.getCurrentIncumbent().popVar2020,
+                        },
+                        {
+                          name: "2022",
+                          data: store.getCurrentIncumbent().popVar2022,
+                        },
+                      ]}
+                      type="bar"
+                      width={"100%"}
+                    />
+                  </div>
+                </Tab>
+                <Tab eventKey="profile" title="Population Variation">
+                  <div>
+                    <h4 className="mt-3">
+                      Population Variation from 2020 to 2022 for{" "}
+                      {store.getCurrentIncumbent().name}
+                    </h4>
+                    <Chart
+                      options={options}
+                      series={[
+                        {
+                          name: "2020",
+                          data: store.getCurrentIncumbent().popVar2020,
+                        },
+                        {
+                          name: "2022",
+                          data: store.getCurrentIncumbent().popVar2022,
+                        },
+                      ]}
+                      type="bar"
+                      width={"100%"}
+                    />
+                  </div>
+                </Tab>
+              </Tabs>
+            ) : (
+              <div />
+            )}
+          </Tab>
+
+          <Tab eventKey="second" title="Ensemble">
+            <h4 className="mt-2">Ensemble Analysis</h4>
+            <ReactApexChart
+              options={options}
+              series={series}
+              type="boxPlot"
+              height={350}
+            />
+          </Tab>
+        </Tabs>
       ) : (
         <div />
       )}

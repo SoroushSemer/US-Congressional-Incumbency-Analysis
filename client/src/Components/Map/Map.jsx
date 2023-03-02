@@ -38,7 +38,7 @@ const Map = () => {
 
   function MyMap() {
     return (
-      <Col xs={6}>
+      <Col xs={store && store.currentState ? 6 : 12}>
         <MapContainer center={coords} zoom={zoom} scrollWheelZoom={false}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -46,7 +46,7 @@ const Map = () => {
           />
           <MyComponent />
 
-          {store && store.currentState ? (
+          {store  ? (
             maps.Maps.map((map) => {
               if (store.getMap(map.name) != -1) {
                 const arizonaJSON = require("../../Data/" + map.arizona);
@@ -64,7 +64,6 @@ const Map = () => {
           ) : (
             <div />
           )}
-          
         </MapContainer>
       </Col>
     );

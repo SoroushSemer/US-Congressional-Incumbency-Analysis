@@ -27,8 +27,7 @@ const Header = () => {
     <Container className="w-100 mt-3">
       <Row>
         <Col xs={6}>
-          <h1>CSE 416 Project</h1>
-          <h2>{store && store.currentState ? store.currentState.name : ""}</h2>
+          <h2>US Congressional Incumbent Analysis</h2>
         </Col>
         <Col xs={2}>
           <Dropdown>

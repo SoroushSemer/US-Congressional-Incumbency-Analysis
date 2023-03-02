@@ -25,6 +25,7 @@ const Home = () => {
         <MyMap />
         <SideBar />
       </Row>
+      <h4 style={{ textAlign: "right" }}>Built By Pirates</h4>
     </Container>
   );
 };

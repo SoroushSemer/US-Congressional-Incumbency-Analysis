@@ -107,10 +107,17 @@ export default function IncumbentTable() {
                 <TableCell component="th" scope="row">
                   {incumbent.district}
                 </TableCell>
-                <TableCell align="left">{incumbent.name}</TableCell>
+                <TableCell align="left"><strong>{incumbent.name}</strong></TableCell>
                 <TableCell align="center">{incumbent.party}</TableCell>
-                <TableCell align="center">
-                  {incumbent.electionResult ? "Win" : "Loss"}
+                <TableCell
+                  align="center"
+                  style={
+                    incumbent.electionResult
+                      ? { color: "green" }
+                      : { color: "red" }
+                  }
+                >
+                  <strong>{incumbent.electionResult ? "Win" : "Loss"}</strong>
                 </TableCell>
                 <TableCell align="center">{incumbent.geoVar}</TableCell>
                 <TableCell align="center">{incumbent.populationVar}</TableCell>

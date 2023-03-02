@@ -15,7 +15,7 @@ function GlobalStoreContextProvider(props) {
   const [store, setStore] = useState({
     currentState: null,
     currentDistrict: null,
-    currentMaps: ["2010 Districts"],
+    currentMaps: ["2020 Districts"],
     currentMapSubType: [],
   });
 

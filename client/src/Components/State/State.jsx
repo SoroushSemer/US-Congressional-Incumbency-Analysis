@@ -10,11 +10,12 @@ const State = (props) => {
     <GeoJSON
       style={(feature) => {
         if (
+          store.currentState &&
           store.currentState.name == props.state &&
           store.currentDistrict == feature.properties.district
         ) {
           return { fillColor: "red", color: "red" };
-        } else {
+        } else if (store.currentState) {
           var color = "green";
           for (const incumbent of store.currentState.incumbents) {
             if (incumbent.district == feature.properties.district) {
