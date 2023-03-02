@@ -4,19 +4,22 @@
       "name": "2010 Districts",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
-      "maryland": "maryland_district2010.json"
+      "maryland": "maryland_district2010.json",
+      "color": "blue"
     },
     {
       "name": "2020 Districts",
       "arizona": "arizona_district2010.json",
-      "louisiana": "louisiana_district2010.json",
-      "maryland": "maryland_district2010.json"
+      "louisiana": "louisiana_district2020.json",
+      "maryland": "maryland_district2010.json",
+      "color": "black"
     },
     {
       "name": "Generated Plan #1",
-      "arizona": "arizona_district2020.json",
-      "louisiana": "louisiana_district2020.json",
-      "maryland": "maryland_district2020.json"
+      "arizona": "arizona_district2010.json",
+      "louisiana": "louisiana_district2010.json",
+      "maryland": "maryland_district2010.json",
+      "color": "cyan"
     }
   ],
   "Subtypes": [

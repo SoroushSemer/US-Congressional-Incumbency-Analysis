@@ -87,9 +87,9 @@ const Map = () => {
                 const louisianaJSON = require("../../Data/" + map.louisiana);
                 return (
                   <div>
-                    <State data={arizonaJSON} state="Arizona" />
-                    <State data={marylandJSON} state="Maryland" />
-                    <State data={louisianaJSON} state="Louisiana" />
+                    <State color={map.color} data={arizonaJSON} state="Arizona" />
+                    <State color={map.color} data={marylandJSON} state="Maryland" />
+                    <State color={map.color} data={louisianaJSON} state="Louisiana" />
                   </div>
                 );
               }

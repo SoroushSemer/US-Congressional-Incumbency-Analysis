@@ -22,7 +22,7 @@ const State = (props) => {
               color = "green";
             }
           }
-          return { fillColor: color, color: "blue" };
+          return { fillColor: color, color: props.color };
         }
       }}
       onEachFeature={(feature, layer) => {

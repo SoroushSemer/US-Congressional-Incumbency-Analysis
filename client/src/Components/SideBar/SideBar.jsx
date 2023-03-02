@@ -15,6 +15,14 @@ import ReactApexChart from "react-apexcharts";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { Checkbox } from "@mui/material";
 const series = [
   {
     name: "box",
@@ -97,6 +105,44 @@ const options = {
     intersect: true,
   },
 };
+
+const data = [
+  {
+    districtPlan: "2010 District",
+    geoVar: 0.1,
+    popVar: 200,
+    RdSplit: 0.3,
+    party: "Republican",
+  },
+  {
+    districtPlan: "2020 District",
+    geoVar: 0.2,
+    popVar: 400,
+    RdSplit: 0.4,
+    party: "Democratic",
+  },
+  {
+    districtPlan: "District Plan 1",
+    geoVar: 0.3,
+    popVar: 600,
+    RdSplit: 0.5,
+    party: "Republican",
+  },
+  {
+    districtPlan: "District Plan 2",
+    geoVar: 0.4,
+    popVar: 800,
+    RdSplit: 0.6,
+    party: "Democratic",
+  },
+  {
+    districtPlan: "District Plan 3",
+    geoVar: 0.5,
+    popVar: 1000,
+    RdSplit: 0.7,
+    party: "Republican",
+  },
+];
 
 const SideBar = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -231,6 +277,56 @@ const SideBar = () => {
                 {Math.floor(Math.random() * 100)}%
               </li>
             </ul>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">
+                      <Checkbox></Checkbox>
+                    </TableCell>
+                    <TableCell width={250} align="center">
+                      <strong>District Plan</strong>
+                    </TableCell>
+                    <TableCell align="center" width={100}>
+                      <strong>Geographic Variation</strong>
+                    </TableCell>
+                    <TableCell align="center" width={100}>
+                      <strong>Population Variation</strong>
+                    </TableCell>
+
+                    <TableCell align="center" width={100}>
+                      <strong>R/D Split</strong>
+                    </TableCell>
+                    <TableCell align="center" width={100}>
+                      <strong>Redistricting Party</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data.map((row) => (
+                    <TableRow>
+                      <TableCell align="center">
+                        <Checkbox></Checkbox>
+                      </TableCell>
+                      <TableCell width={250}>{row.districtPlan}</TableCell>
+                      <TableCell align="center" width={100}>
+                        {row.geoVar}
+                      </TableCell>
+                      <TableCell align="center" width={100}>
+                        {row.popVar}
+                      </TableCell>
+
+                      <TableCell align="center" width={100}>
+                        {row.RdSplit}
+                      </TableCell>
+                      <TableCell align="center" width={100}>
+                        {row.party}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
             <h4 className="mt-2">Ensemble Analysis</h4>
             <ReactApexChart
               options={options}
