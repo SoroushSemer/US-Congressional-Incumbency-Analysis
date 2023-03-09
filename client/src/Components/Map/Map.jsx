@@ -80,21 +80,32 @@ const Map = () => {
             }}
           />
           {store && store.currentState ? (
-            maps.Maps.map((map) => {
-              if (store.getMap(map.name) != -1) {
-                const arizonaJSON = require("../../Data/" + map.arizona);
-                const marylandJSON = require("../../Data/" + map.maryland);
-                const louisianaJSON = require("../../Data/" + map.louisiana);
-                return (
-                  <div>
-                    <State color={map.color} data={arizonaJSON} state="Arizona" />
-                    <State color={map.color} data={marylandJSON} state="Maryland" />
-                    <State color={map.color} data={louisianaJSON} state="Louisiana" />
-                  </div>
-                );
-              }
+            store.currentMapGeoJSONs.map((data, index) => {
+              // console.log(data);
+              return (
+                <State
+                  key={index}
+                  color={data.color}
+                  data={data}
+                  state={store.currentState}
+                />
+              );
             })
           ) : (
+            // maps.Maps.map((map) => {
+            //   if (store.getMap(map.name) != -1) {
+            //     const arizonaJSON = require("../../Data/" + map.arizona);
+            //     const marylandJSON = require("../../Data/" + map.maryland);
+            //     const louisianaJSON = require("../../Data/" + map.louisiana);
+            //     return (
+            //       <div>
+            //         <State color={map.color} data={arizonaJSON} state="Arizona" />
+            //         <State color={map.color} data={marylandJSON} state="Maryland" />
+            //         <State color={map.color} data={louisianaJSON} state="Louisiana" />
+            //       </div>
+            //     );
+            //   }
+            // })
             <div />
           )}
         </MapContainer>

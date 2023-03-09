@@ -5,7 +5,8 @@
 */
 
 import { createContext, useContext, useState } from "react";
-
+import { alignPropType } from "react-bootstrap/esm/types";
+import api from "./axios/api";
 export const GlobalStoreContext = createContext({});
 
 function GlobalStoreContextProvider(props) {
@@ -16,7 +17,9 @@ function GlobalStoreContextProvider(props) {
     currentState: null,
     currentDistrict: null,
     currentMaps: ["2020 Districts"],
+    currentMapGeoJSONs: [],
     currentMapSubType: [],
+    states: null,
   });
 
   //BEGINNNING OF STORE FUNCTIONS: TEMPLATE BELOW
@@ -27,7 +30,28 @@ function GlobalStoreContextProvider(props) {
     */
 
   store.setCurrentState = function (state) {
-    setStore({ ...store, currentState: state, currentDistrict: null });
+    for (const map of store.currentMaps) {
+      async function asyncGetGeoJSON() {
+        // console.log(state.name, map);
+        const response = await api.getState(state.name, map);
+        // const response = await api.getHello();
+        console.log(response);
+        if (response.status == 200) {
+          let geojson = response.data;
+          console.log(response);
+          var currentMapGeoJSONs = store.currentMapGeoJSONs;
+          currentMapGeoJSONs.push(geojson);
+          setStore({
+            ...store,
+            currentState: state,
+            currentDistrict: null,
+            currentMapGeoJSONs: currentMapGeoJSONs,
+          });
+          // console.log(store);
+        }
+      }
+      asyncGetGeoJSON();
+    }
   };
 
   store.setCurrentDistrict = function (district) {
@@ -63,17 +87,41 @@ function GlobalStoreContextProvider(props) {
 
   store.toggleMap = function (mapId) {
     var newArray = store.currentMaps;
+    var newGeoJSONs = store.currentMapGeoJSONs;
     var index = newArray.indexOf(mapId);
     if (index < 0) {
       newArray.push(mapId);
-      setStore({ ...store, currentMaps: newArray });
+      async function asyncGetGeoJSON() {
+        const response = await api.getState(store.currentState.name, mapId);
+        if (response.status == 200) {
+          let geojson = response.data;
+          console.log(response);
+          newGeoJSONs.push(geojson);
+          setStore({
+            ...store,
+            currentMaps: newArray,
+            currentMapGeoJSONs: newGeoJSONs,
+          });
+        }
+      }
+      asyncGetGeoJSON();
     } else {
       newArray.splice(index, 1);
-      setStore({ ...store, currentMaps: newArray });
+      newGeoJSONs.splice(index, 1);
+      setStore({
+        ...store,
+        currentMaps: newArray,
+        currentMapGeoJSONs: newGeoJSONs,
+      });
     }
   };
   store.clearMaps = function () {
-    setStore({ ...store, currentMaps: [], currentMapSubType: [] });
+    setStore({
+      ...store,
+      currentMaps: [],
+      currentMapSubType: [],
+      currentMapGeoJSONs: [],
+    });
   };
   store.getMap = function (mapId) {
     var index = store.currentMaps.indexOf(mapId);
@@ -97,6 +145,19 @@ function GlobalStoreContextProvider(props) {
     var index = store.currentMapSubType.indexOf(subtype);
     return index;
   };
+
+  store.getMapGeoJSON = function (state, map) {
+    async function asyncGetStates() {
+      const response = await api.getState(state, map);
+      if (response.status == 200) {
+        let states = response.data;
+        // console.log(states);
+        setStore({ ...store, states: states });
+      }
+    }
+    asyncGetStates();
+  };
+
   //should not need to edit below
   return (
     <GlobalStoreContext.Provider

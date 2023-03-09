@@ -80,8 +80,8 @@ const Header = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              {MapTypes.map((map) => (
-                <Dropdown.Item onClick={() => store.toggleMap(map)}>
+              {MapTypes.map((map, index) => (
+                <Dropdown.Item key={index} onClick={() => store.toggleMap(map)}>
                   <Checkbox checked={store.getMap(map) >= 0} />
                   {map}
                 </Dropdown.Item>
@@ -105,8 +105,9 @@ const Header = () => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                {MapSubTypes.map((subtype) => (
+                {MapSubTypes.map((subtype, index) => (
                   <Dropdown.Item
+                    key={index}
                     onClick={() => store.toggleMapSubType(subtype)}
                   >
                     <Checkbox checked={store.getMapSubType(subtype) >= 0} />

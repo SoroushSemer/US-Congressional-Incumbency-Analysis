@@ -16,6 +16,9 @@ public class ExampleController {
 
 	@GetMapping("/hello-world")
 	public ResponseEntity<String> get() {
-		return ResponseEntity.ok("Hello World!");
+		return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin","http://localhost:3000")
+                .body("Hello World")
+        ;
 	}
 }

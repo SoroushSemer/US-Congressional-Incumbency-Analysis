@@ -303,8 +303,8 @@ const SideBar = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {data.map((row) => (
-                    <TableRow>
+                  {data.map((row, index) => (
+                    <TableRow key={index}>
                       <TableCell align="center">
                         <Checkbox></Checkbox>
                       </TableCell>

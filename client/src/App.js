@@ -6,6 +6,7 @@ import Home from "./Pages/Home/Home";
 import { GlobalStoreContextProvider } from "./Context/store";
 
 export default function App() {
+  
   return (
     <BrowserRouter>
       <GlobalStoreContextProvider>
