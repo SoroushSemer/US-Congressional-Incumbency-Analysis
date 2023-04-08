@@ -8,15 +8,23 @@ from shapely.geometry import Polygon
 
 # CSV Files for each state and each year, holding data
 # for demographics and incumbency
-# demographics = pd.read_csv("2020_census_MD-3.csv")
+
+# Maryland
+md_demo_raceAge_20 = pd.read_csv("./Maryland/2020/MD2020_VAP for each race.csv")
+
+# Louisana
+
+# Arizona 
 
 # Shapefile/GeoJSON files converted to geoDataFrames to be edited
 # for each state and each year
 
 # Maryland
-md_2020 = gpd.read_file("./Maryland2020/tl_2020_24_vtd20.shp") # GEOID20
-md_2022 = gpd.read_file("./Maryland2022/Maryland_Election_Boundaries_-_Precincts_2022.geojson") # VTD
+# md_2020 = gpd.read_file("./Maryland2020/tl_2020_24_vtd20.shp") # GEOID20
+md_2020 = gpd.read_file("./Maryland/2020/tl_2020_24_vtd20.shp") # GEOID20
+md_2022 = gpd.read_file("./Maryland/2022/MD2022_Precincts.geojson") # VTD
 md_2022['NEIGHBORS'] = False
+
 
 # Louisana
 
@@ -83,6 +91,18 @@ def insert_demographic(gdf, demo_file, tag):
     '''
     Function to enter a specfic demographic stat into the GDF from a file
     '''
+    # print(gdf)
+
+    # print(demo_file.head())
+
+    # Merge the CSV and GDF on tag
+    # mergedData = pd.merge(
+    # gdf,
+    # demo_file,
+    # on=tag)
+
+    # mergedData = mergedData[['GEOID20', 'geometry']]
+    # print(mergedData.head())
     return
 
 def aggregate_data(gdf, src):
@@ -102,9 +122,14 @@ def generate_GEOJSON(gdf, filename):
 
 # There exists 2 rows that have bad data but geometries that work
 # print(precincts2022[precincts2022['VTD'].isnull()])
-md_2022 = md_2022.dropna()
-md_2022 = md_2022.reset_index(drop=True)
-neighbors = calculate_neighbors(md_2022, 'VTD')
-insert_neighbors(md_2022, neighbors, 'VTD')
+# md_2022 = md_2022.dropna()
+# md_2022 = md_2022.reset_index(drop=True)
+# neighbors = calculate_neighbors(md_2022, 'VTD')
+# insert_neighbors(md_2022, neighbors, 'VTD')
 
-print(md_2022)
+# print(md_2022)
+
+insert_demographic(md_2020, md_demo_raceAge_20, 'GEOID20')
+
+test = gpd.read_file("./Test/md_vest_20.shp")
+print(test)
