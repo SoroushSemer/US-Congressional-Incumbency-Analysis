@@ -2,45 +2,54 @@ import geopandas as gpd
 import pandas as pd
 import maup
 
-from shapely.ops import unary_union
-from shapely.geometry import Point
-from shapely.geometry import Polygon
-
 # CSV Files for each state and each year, holding data
 # for demographics and incumbency
 
 # Maryland
-md_demo_raceAge_20 = pd.read_csv("./Maryland/2020/MD2020_VAP for each race.csv")
+#---2020---#
+md_demo_20 = pd.read_csv("./Maryland/2020/MD2020_VAP for each race.csv")
+md_adj_20 = pd.read_csv("./Maryland/2020/md_vtd_2020_rook_adjacency.csv")
 
-# Louisana
-
-# Arizona 
+#---2022---#
 
 # Shapefile/GeoJSON files converted to geoDataFrames to be edited
 # for each state and each year
 
 # Maryland
-# md_2020 = gpd.read_file("./Maryland2020/tl_2020_24_vtd20.shp") # GEOID20
-md_2020 = gpd.read_file("./Maryland/2020/tl_2020_24_vtd20.shp") # GEOID20
+#---2020---#
+md_2020 = gpd.read_file("./Maryland/2020/md_2020.json") # GEOID20
+md_2020_districts = gpd.read_file("./Maryland/2020/md_2020_districts.json") 
+#---2022---#
 md_2022 = gpd.read_file("./Maryland/2022/MD2022_Precincts.geojson") # VTD
-md_2022['NEIGHBORS'] = False
-
-
-# Louisana
-
-# Arizona 
 
 def clean_table(gdf):
     '''
-    Clean geometries with Maup and clean out bad entries from GDF
+    Clean geometries with Maup and clean out bad entries from GDF. Keep valid columns like name, geometry, and id
     '''
-    return
+    # CURRENTLY IMPLEMENTED FOR MARYLAND. WILL MAKE 2 OTHER SCRIPTS FOR OTHER STATES
 
-def calculate_neighbors(gdf, prec): # Check this over 
+    # Iterate over the column names and only keep certain ones
+
+    # Change CRS first
+    gdf = gdf.to_crs(3857)
+
+    for col in gdf.columns:
+        # Tags we want from Maryland
+        if col != 'GEOID20' and col != 'NAMELSAD20' and col != 'geometry': 
+            gdf.drop(col, axis=1, inplace=True)
+
+    # Close gaps and clean up overlaps
+    gdf['geometry'] = maup.close_gaps(gdf['geometry']) 
+    gdf['geometry'] = maup.resolve_overlaps(gdf['geometry'])
+    return gdf
+
+def calculate_neighbors(gdf, prec): 
     '''
     Function that takes a GDF and uses whatever the key the precinct is attached to in the file
-    to figure out neighbors
+    to figure out neighbors then inserts it into gdf. Returns modified gdf
     '''    
+    # Make column for neighbors
+    gdf['NEIGHBORS'] = False
     # CRS conversion from degrees to meters
     gdf = gdf.to_crs(3857)
     # Keep a copy and add a buffer of 60.96 meters = 200ft to the geometry 
@@ -71,39 +80,24 @@ def calculate_neighbors(gdf, prec): # Check this over
     for val in [i for i in gdf[prec] if i not in list(res.keys())]:
         # Add a empty list for these self intersecters
         res[val] = []    
-    return res
-
-def insert_neighbors(gdf, neigh, tag):
-    '''
-    Inserts neighbors into GDF by tag. Tag is column name for precinct id. 
-    '''
-    for key in neigh:
-        gdf.loc[gdf[tag] == key, 'NEIGHBORS'] = ", ".join(neigh[key])
-
-def drop_columns(gdf):
-    '''
-    Drop columns from gdf that we do not care about. Usually only need geometries and
-    precinct ids. May keep precinct names as well.  
-    '''
-    return
+    
+    # Insert neighbors into gdf from res list
+    for key in res:
+        gdf.loc[gdf[prec] == key, 'NEIGHBORS'] = ", ".join(res[key])
+    
+    return gdf
 
 def insert_demographic(gdf, demo_file, tag):
     '''
     Function to enter a specfic demographic stat into the GDF from a file
     '''
-    # print(gdf)
-
-    # print(demo_file.head())
-
-    # Merge the CSV and GDF on tag
-    # mergedData = pd.merge(
-    # gdf,
-    # demo_file,
-    # on=tag)
-
-    # mergedData = mergedData[['GEOID20', 'geometry']]
-    # print(mergedData.head())
-    return
+    for col in demo_file.columns:
+        # Tags we want from demographic
+        if "_vap" not in col and col != "GEOID20": 
+            demo_file.drop(col, axis=1, inplace=True)
+    # Merge the CSV and GDF on tag (Here being GEOID20)
+    gdf = pd.merge(gdf, demo_file, on=tag)
+    return gdf
 
 def aggregate_data(gdf, src):
     '''
@@ -116,9 +110,23 @@ def generate_GEOJSON(gdf, filename):
     Function to generate the GEOJSON from the GDF that is given.  
     '''
     return
+def insert_district(gdf, districts):
+    '''
+    Function to assign precincts to Congressional districts. Use maup.assign
+    '''
+    # Convert to meters 
+    districts = districts.to_crs(3857)
+    # Assign precincts to districts
+    assignment = maup.assign(gdf['geometry'], districts['geometry'])
+    # Convert to correct ids
+    for index, item in assignment.items():
+        assignment[index] = f"0{item + 1}"
+    # Add to gdf
+    gdf['DISTRICT'] = assignment 
+    return gdf
 
 
-# ------------------TESTING/GENERATION--------------------#
+# ------------------GENERATION--------------------#
 
 # There exists 2 rows that have bad data but geometries that work
 # print(precincts2022[precincts2022['VTD'].isnull()])
@@ -129,7 +137,19 @@ def generate_GEOJSON(gdf, filename):
 
 # print(md_2022)
 
-insert_demographic(md_2020, md_demo_raceAge_20, 'GEOID20')
+# insert_demographic(md_2020, md_demo_raceAge_20, 'GEOID20')
 
-test = gpd.read_file("./Test/md_vest_20.shp")
-print(test)
+# test2 = gpd.read_file("./Louisiana/2020/la_pl2020_cd.shp")
+# test3 = gpd.read_file("./Arizona/2020/az_vtd_2020_bound.shp")
+
+# print(test2)
+# print(test3)
+
+# print(gdf['geometry'])
+# print(gdf.loc[:, 'geometry'])
+# Create 2020 complete dataframe
+md_2020 = clean_table(md_2020)
+md_2020 = insert_district(md_2020, md_2020_districts)
+md_2020 = insert_demographic(md_2020, md_demo_20, 'GEOID20')
+md_2020.to_file('TEST.json', driver="GeoJSON")
+print(md_2020.head())
