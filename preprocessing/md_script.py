@@ -8,8 +8,10 @@ md_demo_20 = pd.read_csv("./Maryland/2020/MD2020_VAP for each race.csv")
 md_adj_20 = pd.read_csv("./Maryland/2020/md_vtd_2020_rook_adjacency.csv")
 md_incumbent = pd.read_csv("./Maryland/2022/md_2022_primary_cand_data.csv")
 
-''' Shapefile/GeoJSON files converted to geoDataFrames to be edited '''
+md_20_votes = pd.read_csv("./Maryland/2020/md_2020_votes.csv")
+md_22_votes = pd.read_csv("./Maryland/2022/md_2022_votes.csv")
 
+''' Shapefile/GeoJSON files converted to geoDataFrames to be edited '''
 md_2020_precincts = gpd.read_file("./Maryland/2020/2020.zip!md_2020_precincts.json") 
 md_2020_districts = gpd.read_file("./Maryland/2020/2020.zip!md_2020_districts.json") 
 
@@ -129,6 +131,11 @@ def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
     
     return tab_2020, tab_2022
 
+def insert_votes(gdf, tag, votes):
+    
+
+    return gdf
+
 # ------------------GENERATION--------------------#
 
 # There exists 2 rows that have bad data but geometries that work
@@ -149,7 +156,13 @@ md_2022_precincts = calc_demographic(md_2022_precincts, md_2020_precincts)
 md_2022_precincts = calculate_neighbors(md_2022_precincts, 'VTD')
 md_2020_precincts, md_2022_precincts = insert_incumbent(md_2020_precincts, md_2022_precincts, md_incumbent)
 
+# md_2020_precincts = insert_votes(md_2020_precincts, 'GEOID20', md_20_votes)
+# md_2022_precincts = insert_votes(md_2022_precincts, 'VTD', md_22_votes)
+
 print(md_2020_precincts.head())
 print(md_2022_precincts.head())
 # md_2020_precincts.to_file('md_2020_complete.json', driver="GeoJSON")
 # md_2022_precincts.to_file('md_2022_complete.json', driver="GeoJSON")
+
+print(md_20_votes[md_20_votes['Office Name'] == 'Representative in Congress'])
+print(md_22_votes[md_22_votes['Office Name'] == 'U.S. Congress'])
