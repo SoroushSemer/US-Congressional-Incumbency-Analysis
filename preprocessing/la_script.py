@@ -6,7 +6,7 @@ import math
 ''' CSV Files holding data for demographics and incumbency for each year '''
 la_demo_20 = pd.read_csv("./Louisiana/2020/LA2020_VAP for each race.csv")
 la_adj_20 = pd.read_csv("./Louisiana/2020/la_vtd_official_2020_rook_adjacency.csv")
-# la_incumbent = pd.read_csv("./Louisiana/2022/la_2022_primary_cand_data.csv")
+la_incumbent = pd.read_csv("./Louisiana/2022/la_2022_primary_cand_data.csv")
 
 ''' Shapefile/GeoJSON files converted to geoDataFrames to be edited '''
 la_2020_precincts = gpd.read_file("./Louisiana/2020/2020.zip!la_2020_precincts.json") 
@@ -153,7 +153,7 @@ la_2022_precincts = clean_table(la_2022_precincts, ['GEOID20', 'NAMELSAD20', 'ge
 la_2022_precincts = insert_district(la_2022_precincts, la_2022_districts)
 la_2022_precincts = calc_demographic(la_2022_precincts, la_2020_precincts)
 la_2022_precincts = calculate_neighbors(la_2022_precincts, 'GEOID20')
-# la_2020_precincts, la_2022_precincts = insert_incumbent(la_2020_precincts, la_2022_precincts, la_incumbent)
+la_2020_precincts, la_2022_precincts = insert_incumbent(la_2020_precincts, la_2022_precincts, la_incumbent)
 
 print(la_2020_precincts.head())
 print(la_2022_precincts.head())

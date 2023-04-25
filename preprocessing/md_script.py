@@ -149,8 +149,6 @@ md_2022_precincts = calc_demographic(md_2022_precincts, md_2020_precincts)
 md_2022_precincts = calculate_neighbors(md_2022_precincts, 'VTD')
 md_2020_precincts, md_2022_precincts = insert_incumbent(md_2020_precincts, md_2022_precincts, md_incumbent)
 
-md_2020_precincts, md_2022_precincts = insert_incumbent(md_2020_precincts, md_2022_precincts, md_incumbent)
-
 print(md_2020_precincts.head())
 print(md_2022_precincts.head())
 # md_2020_precincts.to_file('md_2020_complete.json', driver="GeoJSON")

@@ -12,8 +12,8 @@ az_incumbent = pd.read_csv("./Arizona/2022/az_2022_primary_cand_data.csv")
 az_2020_precincts = gpd.read_file("./Arizona/2020/2020.zip!az_2020_precincts.json") 
 az_2020_districts = gpd.read_file("./Arizona/2020/2020.zip!az_2020_districts.json") 
 
-# az_2022_precincts = gpd.read_file("./Arizona/2022/az_2022_precincts.json")
-# az_2022_districts = gpd.read_file("./Arizona/2022/az_2022_districts.json")
+az_2022_precincts = gpd.read_file("./Arizona/2020/2020.zip!az_2020_precincts.json")
+az_2022_districts = gpd.read_file("./Arizona/2022/az_2022_districts.json")
 
 def clean_table(gdf, key_arr):
     '''
@@ -75,7 +75,7 @@ def aggregate_data(gdf, src):
     Function to aggregate data to precinct level. Should use Maup methods
     '''
     pieces = maup.intersections(src, gdf, area_cutoff=0)
-    print(pieces)
+    # print(pieces)
     columns = ['Tot_2020_vap', 'Wh_2020_vap', 'His_2020_vap', 'BlC_2020_vap', 'NatC_2020_vap', 'AsnC_2020_vap', 'PacC_2020_vap']
     weights = src['Tot_2020_vap']
     weights = maup.normalize(weights, level=0)
@@ -150,12 +150,15 @@ az_2020_precincts = insert_demographic(az_2020_precincts, az_demo_20, 'GEOID20')
 az_2020_precincts = pd.merge(az_2020_precincts, az_adj_20, on='GEOID20')
 az_2020_precincts = az_2020_precincts.rename(columns={"ADJ_GEOMS": "NEIGHBORS"})
 
-# az_2022_precincts = clean_table(az_2022_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])
-# az_2022_precincts = insert_district(az_2022_precincts, az_2022_districts)
-
-# az_2020_precincts, az_2022_precincts = insert_incumbent(az_2020_precincts, az_2022_precincts, az_incumbent)
+az_2022_precincts = clean_table(az_2022_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])
+az_2022_precincts = insert_district(az_2022_precincts, az_2022_districts)
+az_2022_precincts = insert_demographic(az_2022_precincts, az_demo_20, 'GEOID20')
+az_2022_precincts = pd.merge(az_2022_precincts, az_adj_20, on='GEOID20')
+az_2022_precincts = az_2022_precincts.rename(columns={"ADJ_GEOMS": "NEIGHBORS"})
+az_2020_precincts, az_2022_precincts = insert_incumbent(az_2020_precincts, az_2022_precincts, az_incumbent)
 
 print(az_2020_precincts.head())
-# print(az_2022_precincts.head())
+print(az_2022_precincts.head())
+
 # az_2020_precincts.to_file('az_2020_final.json', driver="GeoJSON")
 # az_2022_precincts.to_file('az_2022_final.json', driver="GeoJSON")
