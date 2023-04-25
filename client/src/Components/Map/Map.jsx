@@ -45,40 +45,46 @@ const Map = () => {
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           <MyComponent />
+          {!store.currentState ? (
+            <div>
+              <GeoJSON
+                data={arizona}
+                onEachFeature={(feature, layer) => {
+                  layer.on({
+                    click: () => store.setCurrentState(states.arizona),
+                  });
+                  layer.bindTooltip("Arizona", {
+                    direction: "center",
+                  });
+                }}
+              />
+              <GeoJSON
+                data={louisiana}
+                onEachFeature={(feature, layer) => {
+                  layer.on({
+                    click: () => store.setCurrentState(states.louisiana),
+                  });
+                  layer.bindTooltip("Louisiana", {
+                    direction: "center",
+                  });
+                }}
+              />
+              <GeoJSON
+                data={maryland}
+                onEachFeature={(feature, layer) => {
+                  layer.on({
+                    click: () => store.setCurrentState(states.maryland),
+                  });
+                  layer.bindTooltip("Maryland", {
+                    direction: "center",
+                  });
+                }}
+              />
+            </div>
+          ) : (
+            <div />
+          )}
 
-          <GeoJSON
-            data={arizona}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                click: () => store.setCurrentState(states.arizona),
-              });
-              layer.bindTooltip("Arizona", {
-                direction: "center",
-              });
-            }}
-          />
-          <GeoJSON
-            data={louisiana}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                click: () => store.setCurrentState(states.louisiana),
-              });
-              layer.bindTooltip("Louisiana", {
-                direction: "center",
-              });
-            }}
-          />
-          <GeoJSON
-            data={maryland}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                click: () => store.setCurrentState(states.maryland),
-              });
-              layer.bindTooltip("Maryland", {
-                direction: "center",
-              });
-            }}
-          />
           {store && store.currentState ? (
             store.currentMapGeoJSONs.map((data, index) => {
               // console.log(data);

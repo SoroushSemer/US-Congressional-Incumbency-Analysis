@@ -15,7 +15,21 @@
       "color": "black"
     },
     {
-      "name": "Generated Plan #1",
+      "name": "Generated Plan 1",
+      "arizona": "arizona_district2010.json",
+      "louisiana": "louisiana_district2010.json",
+      "maryland": "maryland_district2010.json",
+      "color": "cyan"
+    },
+    {
+      "name": "Generated Plan 2",
+      "arizona": "arizona_district2010.json",
+      "louisiana": "louisiana_district2010.json",
+      "maryland": "maryland_district2010.json",
+      "color": "cyan"
+    },
+    {
+      "name": "Generated Plan 3",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
