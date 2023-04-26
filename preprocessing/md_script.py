@@ -20,7 +20,8 @@ md_2022_districts = gpd.read_file("./Maryland/2022/2022.zip!MD2022_Districts.jso
 
 def clean_table(gdf, key_arr):
     '''
-    Clean geometries with Maup and clean out bad entries from GDF. Keep valid columns like name, geometry, and id
+    Clean geometries with Maup and clean out bad entries from GDF. 
+    Keep valid columns like name, geometry, and id
     '''
     gdf = gdf.dropna()
     gdf = gdf.reset_index(drop=True)
@@ -36,7 +37,7 @@ def clean_table(gdf, key_arr):
 def calculate_neighbors(gdf, prec): 
     '''
     Function that takes a GDF and uses whatever the key the precinct is attached to in the file
-    to figure out neighbors then inserts it into gdf. Returns modified gdf
+    to figure out neighbors then inserts it into gdf. 
     '''    
     gdf['NEIGHBORS'] = False
     gdf = gdf.to_crs(3857)                                                                            # CRS conversion from degrees to meters
@@ -91,7 +92,7 @@ def calc_demographic(gdf, src):
 
 def insert_district(gdf, districts):
     '''
-    Function to assign precincts to Congressional districts. Use maup.assign
+    Function to assign precincts to Congressional districts. Uses maup.assign
     '''
     districts = districts.to_crs(3857)                                     # Convert to meters 
     assignment = maup.assign(gdf['geometry'], districts['geometry'])       # Assign precincts to districts
@@ -103,6 +104,9 @@ def insert_district(gdf, districts):
     return gdf
 
 def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
+    '''
+    Function to insert the incumbent of a particular precinct into the gdf of both years. 
+    '''
     columns = ['HOME_PRECINCT', 'INCUMBENT', 'PARTY']
     incumbent_columns = ['Candidate', 'Party']
     tab_2020[columns] = False
@@ -128,6 +132,9 @@ def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
     return tab_2020, tab_2022
 
 def insert_votes(gdf_20, gdf_22, votes_20, votes_22):
+    '''
+    Function to insert the votes of a particular precinct into the gdf of both years. 
+    '''
     reps_only_20 = votes_20[votes_20['Office Name'] == 'Representative in Congress']
     reps_only_22 = votes_22[votes_22['Office Name'] == 'U.S. Congress']
     columns = ['DEM Votes', 'REP Votes']
@@ -139,12 +146,13 @@ def insert_votes(gdf_20, gdf_22, votes_20, votes_22):
         incumbent = gdf_20[gdf_20['GEOID20'] == prec_id]['INCUMBENT'].iloc[0]
         # Check if value is empty after checking with incumbent alongside the prec_id 
 
-        # data_reported = reps_only_20.loc[(reps_only_20['GEOID20'] == prec_id)]                         # Check if precinct reported voting
-        # if not data_reported.empty:
-        #     rep_votes_20 = data_reported.loc[data_reported['Party'] == 'REP']['Total Votes'].iloc[0]
-        #     dem_votes_20 = data_reported.loc[data_reported['Party'] == 'DEM']['Total Votes'].iloc[0]
-        #     gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'REP Votes'] = int(rep_votes_20)
-        #     gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'DEM Votes'] = int(dem_votes_20)
+        data_reported = reps_only_20.loc[(reps_only_20['GEOID20'] == prec_id)]                         # Check if precinct reported voting
+        if not data_reported.empty:
+            rep_votes_20 = data_reported.loc[data_reported['Party'] == 'REP']['Total Votes'].iloc[0]
+            dem_votes_20 = data_reported.loc[data_reported['Party'] == 'DEM']['Total Votes'].iloc[0]
+            gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'REP Votes'] = int(rep_votes_20)
+            gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'DEM Votes'] = int(dem_votes_20)
+
         print(reps_only_20[reps_only_20['Candidate Name'] == incumbent])
         print(gdf_20[gdf_20['INCUMBENT'] == incumbent])
         break
@@ -153,17 +161,22 @@ def insert_votes(gdf_20, gdf_22, votes_20, votes_22):
         incumbent = gdf_22[gdf_22['VTD'] == prec_id]['INCUMBENT'].iloc[0]
         print(reps_only_22[reps_only_22['Candidate Name'] == incumbent])
         print(gdf_22[gdf_22['INCUMBENT'] == incumbent])
-        # data_reported = reps_only_22.loc[(reps_only_22['VTD'] == prec_id)]
-        # if not data_reported.empty:
-        #     rep_votes_22 = data_reported.loc[data_reported['Party'] == 'REP']['Total Votes'].iloc[0]
-        #     dem_votes_22 = data_reported.loc[data_reported['Party'] == 'DEM']['Total Votes'].iloc[0]
-        #     gdf_22.loc[gdf_20['VTD'] == prec_id, 'REP Votes'] = int(rep_votes_22)
-        #     gdf_22.loc[gdf_20['VTD'] == prec_id, 'DEM Votes'] = int(dem_votes_22)
+
+        data_reported = reps_only_22.loc[(reps_only_22['VTD'] == prec_id)]
+        if not data_reported.empty:
+            rep_votes_22 = data_reported.loc[data_reported['Party'] == 'REP']['Total Votes'].iloc[0]
+            dem_votes_22 = data_reported.loc[data_reported['Party'] == 'DEM']['Total Votes'].iloc[0]
+            gdf_22.loc[gdf_20['VTD'] == prec_id, 'REP Votes'] = int(rep_votes_22)
+            gdf_22.loc[gdf_20['VTD'] == prec_id, 'DEM Votes'] = int(dem_votes_22)
+
         break
 
     return gdf_20, gdf_22
 
 def clean_districts(district, tab_incumbent, precs, p_id, demo_columns):
+    '''
+    Function to clean a district json and insert incumbent, color, and total population
+    '''
     key_arr = ['DISTRICT', 'geometry']
     columns = ['COLOR', 'INCUMBENT', 'PARTY']
     incumbent_columns = ['Candidate', 'Party']
@@ -189,7 +202,7 @@ def clean_districts(district, tab_incumbent, precs, p_id, demo_columns):
             district.loc[district['DISTRICT'] == f'0{dist_id}', columns[i]] = incumbent_val[i]
     
     district[demo_columns] = False
-    for dist_id in district['DISTRICT']:
+    for dist_id in district['DISTRICT']:                                                                 # This inserts the population per precinct
         demo_vals = {demo_columns[i]: 0 for i in range(len(demo_columns))}
         for prec_id in precs.loc[precs['DISTRICT'] == dist_id][p_id]:
             for tag in demo_columns:
@@ -267,3 +280,8 @@ md_2022_districts.to_file('md_2022_districts.json', driver="GeoJSON")
 
 # md_2020_precincts.to_file('md_2020_complete.json', driver="GeoJSON")
 # md_2022_precincts.to_file('md_2022_complete.json', driver="GeoJSON")
+
+''' 
+Need to calculate area of districts and precincts. 
+Then merge in election data correctly. Then apply this knowledge to other files
+'''
