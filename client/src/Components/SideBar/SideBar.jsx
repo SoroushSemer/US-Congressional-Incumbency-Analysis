@@ -181,7 +181,7 @@ const SideBar = () => {
             )}
             {store && store.currentDistrict ? (
               <Tabs
-                defaultActiveKey="profile"
+                defaultActiveKey="contact"
                 id="uncontrolled-tab-example"
                 className="mb-3 mt-2"
               >
@@ -194,10 +194,15 @@ const SideBar = () => {
                       {store.getCurrentIncumbent().name}
                     </li>
                     <li>
-                      <strong>Population: </strong>
-                      {Math.floor(Math.random() * 100000)}
+                      <strong>2020 Population: </strong>
+                      {store.getCurrentIncumbent().popVar2020[0]}
+                    </li>
+                    <li>
+                      <strong>2022 Population: </strong>
+                      {store.getCurrentIncumbent().popVar2022[0]}
                     </li>
                   </ul>
+                  <h5>Redistricting Policy</h5>
                   <p>{store.currentState.summary}</p>
                 </Tab>
                 <Tab eventKey="home" title="Geographic Variation">
