@@ -202,8 +202,6 @@ const SideBar = () => {
                       {store.getCurrentIncumbent().popVar2022[0]}
                     </li>
                   </ul>
-                  <h5>Redistricting Policy</h5>
-                  <p>{store.currentState.summary}</p>
                 </Tab>
                 <Tab eventKey="home" title="Geographic Variation">
                   <div>
@@ -252,6 +250,11 @@ const SideBar = () => {
                   </div>
                 </Tab>
               </Tabs>
+            ) : store && store.currentState ? (
+              <div>
+                <h5 className="mt-3">Redistricting Policy</h5>
+                <p>{store.currentState.summary}</p>
+              </div>
             ) : (
               <div />
             )}
