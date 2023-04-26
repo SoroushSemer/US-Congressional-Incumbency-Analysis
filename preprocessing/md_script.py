@@ -131,17 +131,26 @@ def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
     
     return tab_2020, tab_2022
 
-def insert_votes(gdf, tag, votes):
-    
+def insert_votes(gdf_20, gdf_22, votes_20, votes_22):
+    reps_only_20 = votes_20[votes_20['Office Name'] == 'Representative in Congress']
+    reps_only_22 = votes_22[votes_22['Office Name'] == 'U.S. Congress']
+    # print(votes_20[votes_20['Office Name'] == 'Representative in Congress']) # 'GEOID20'
+    # print(votes_22[votes_22['Office Name'] == 'U.S. Congress']) # 'VTD'
+    gdf_20['Total Votes'] = False
+    gdf_22['Total Votes'] = False
+    for prec_id in gdf_20['GEOID20']:
+        # Check incumbent as well
+        # gdf_20[gdf_20['GEOID20'] == prec_id]['INCUMBENT'].iloc[0]
+        # Check if value is empty after checking with incumbent alongside the prec_id 
+        print(prec_id)
+        print(gdf_20[gdf_20['GEOID20'] == prec_id])
+        print(gdf_20[gdf_20['DISTRICT'] == '01'])
+        print(reps_only_20[reps_only_20['Candidate Name'] == 'Andy Harris'])
+        print(reps_only_20[reps_only_20['GEOID20'] == prec_id])
+        break
 
-    return gdf
 
-# ------------------GENERATION--------------------#
-
-# There exists 2 rows that have bad data but geometries that work
-# print(precincts2022[precincts2022['VTD'].isnull()])
-# md_2022 = md_2022.dropna()
-# md_2022 = md_2022.reset_index(drop=True)
+    return gdf_20, gdf_22
 
 ''' Create and generate 2020 and 2022 complete json '''
 md_2020_precincts = clean_table(md_2020_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])
@@ -154,15 +163,12 @@ md_2022_precincts = clean_table(md_2022_precincts, ['VTD', 'NAME', 'geometry'])
 md_2022_precincts = insert_district(md_2022_precincts, md_2022_districts)
 md_2022_precincts = calc_demographic(md_2022_precincts, md_2020_precincts)
 md_2022_precincts = calculate_neighbors(md_2022_precincts, 'VTD')
+
 md_2020_precincts, md_2022_precincts = insert_incumbent(md_2020_precincts, md_2022_precincts, md_incumbent)
+md_2020_precincts, md_2022_precincts = insert_votes(md_2020_precincts, md_2022_precincts, md_20_votes, md_22_votes)
 
-# md_2020_precincts = insert_votes(md_2020_precincts, 'GEOID20', md_20_votes)
-# md_2022_precincts = insert_votes(md_2022_precincts, 'VTD', md_22_votes)
+# print(md_2020_precincts.head())
+# print(md_2022_precincts.head())
 
-print(md_2020_precincts.head())
-print(md_2022_precincts.head())
 # md_2020_precincts.to_file('md_2020_complete.json', driver="GeoJSON")
 # md_2022_precincts.to_file('md_2022_complete.json', driver="GeoJSON")
-
-print(md_20_votes[md_20_votes['Office Name'] == 'Representative in Congress'])
-print(md_22_votes[md_22_votes['Office Name'] == 'U.S. Congress'])
