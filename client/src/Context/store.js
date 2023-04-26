@@ -16,7 +16,7 @@ function GlobalStoreContextProvider(props) {
   const [store, setStore] = useState({
     currentState: null,
     currentDistrict: null,
-    currentMaps: ["2020 Districts"],
+    currentMaps: ["2022 District Plan"],
     currentMapGeoJSONs: [],
     currentMapSubType: [],
     states: null,
@@ -33,7 +33,7 @@ function GlobalStoreContextProvider(props) {
     for (const map of store.currentMaps) {
       async function asyncGetGeoJSON() {
         // console.log(state.name, map);
-        const response = await api.getState(state.name, map);
+        const response = await api.getMap(state, map);
         // const response = await api.getHello();
         console.log(response);
         if (response.status == 200) {
@@ -41,13 +41,27 @@ function GlobalStoreContextProvider(props) {
           console.log(response);
           var currentMapGeoJSONs = store.currentMapGeoJSONs;
           currentMapGeoJSONs.push(geojson);
+
           setStore({
             ...store,
-            currentState: state,
             currentDistrict: null,
             currentMapGeoJSONs: currentMapGeoJSONs,
           });
-          // console.log(store);
+
+          async function asyncGetState() {
+            // console.log(state.name, map);
+            const response = await api.getState(state);
+            // const response = await api.getHello();
+            console.log(response);
+            if (response.status == 200) {
+              setStore({
+                ...store,
+                currentState: response.data,
+              });
+            }
+            // console.log(store);
+          }
+          asyncGetState();
         }
       }
       asyncGetGeoJSON();
@@ -92,7 +106,7 @@ function GlobalStoreContextProvider(props) {
     if (index < 0) {
       newArray.push(mapId);
       async function asyncGetGeoJSON() {
-        const response = await api.getState(store.currentState.name, mapId);
+        const response = await api.getMap(store.currentState.name, mapId);
         if (response.status == 200) {
           let geojson = response.data;
           console.log(response);
@@ -148,7 +162,7 @@ function GlobalStoreContextProvider(props) {
 
   store.getMapGeoJSON = function (state, map) {
     async function asyncGetStates() {
-      const response = await api.getState(state, map);
+      const response = await api.getMap(state, map);
       if (response.status == 200) {
         let states = response.data;
         // console.log(states);

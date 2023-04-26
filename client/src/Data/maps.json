@@ -1,14 +1,14 @@
 {
   "Maps": [
     {
-      "name": "2010 Districts",
+      "name": "2022 District Plan",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
       "color": "blue"
     },
     {
-      "name": "2020 Districts",
+      "name": "2020 District Plan",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2020.json",
       "maryland": "maryland_district2010.json",
@@ -38,24 +38,6 @@
   ],
   "Subtypes": [
     {
-      "name": "2010 Precincts",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2020 Precincts",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2010 Population Heat Map",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
       "name": "2020 Population Heat Map",
       "arizona": "",
       "louisiana": "",
@@ -74,37 +56,7 @@
       "maryland": ""
     },
     {
-      "name": "2010 District Size (mi^2)",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2020 District Size (mi^2)",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2010 Majority Racial Demographic",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
       "name": "2020 Majority Racial Demographic",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2010 Economic Demographic",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2020 Economic Demographic",
       "arizona": "",
       "louisiana": "",
       "maryland": ""

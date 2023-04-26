@@ -48,19 +48,15 @@ const Header = () => {
             <Dropdown.Menu>
               <Dropdown.Item
                 onClick={() => {
-                  store.setCurrentState(states.arizona);
+                  store.setCurrentState("Arizona");
                 }}
               >
                 Arizona
               </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => store.setCurrentState(states.louisiana)}
-              >
+              <Dropdown.Item onClick={() => store.setCurrentState("Louisiana")}>
                 Louisiana
               </Dropdown.Item>
-              <Dropdown.Item
-                onClick={() => store.setCurrentState(states.maryland)}
-              >
+              <Dropdown.Item onClick={() => store.setCurrentState("Maryland")}>
                 Maryland
               </Dropdown.Item>
               <Button

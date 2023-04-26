@@ -9,9 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.server.server.StateRepository;
+
 @RestController
 @RequestMapping("/maps/Maryland")
 public class MD_Controller {
+
+    private StateRepository repository; 
+
     @GetMapping(value = "/2020 Districts", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Resource> getMD2020() throws Exception {
         Resource resource = new ClassPathResource("md_2020_complete.json");

@@ -189,15 +189,15 @@ const SideBar = () => {
                   <h5>District #{store.currentDistrict}</h5>
                   <ul>
                     <li>
-                      <strong>Area: </strong>
-                      {Math.floor(Math.random() * 1000)} sq. mi.
+                      <strong>Incumbent: </strong>
+                      {store.getCurrentIncumbent().name}
                     </li>
                     <li>
                       <strong>Population: </strong>
                       {Math.floor(Math.random() * 100000)}
                     </li>
                     <li>
-                      <strong>Winner: </strong>John Doe
+                      <strong>White: </strong>John Doe
                     </li>
                   </ul>
                 </Tab>

@@ -51,7 +51,7 @@ const Map = () => {
                 data={arizona}
                 onEachFeature={(feature, layer) => {
                   layer.on({
-                    click: () => store.setCurrentState(states.arizona),
+                    click: () => store.setCurrentState("Arizona"),
                   });
                   layer.bindTooltip("Arizona", {
                     direction: "center",
@@ -62,7 +62,7 @@ const Map = () => {
                 data={louisiana}
                 onEachFeature={(feature, layer) => {
                   layer.on({
-                    click: () => store.setCurrentState(states.louisiana),
+                    click: () => store.setCurrentState("Louisiana"),
                   });
                   layer.bindTooltip("Louisiana", {
                     direction: "center",
@@ -73,7 +73,7 @@ const Map = () => {
                 data={maryland}
                 onEachFeature={(feature, layer) => {
                   layer.on({
-                    click: () => store.setCurrentState(states.maryland),
+                    click: () => store.setCurrentState("Maryland"),
                   });
                   layer.bindTooltip("Maryland", {
                     direction: "center",

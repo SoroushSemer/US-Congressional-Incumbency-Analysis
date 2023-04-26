@@ -1,0 +1,173 @@
+[
+  {
+    "name": "Arizona",
+    "coords": [34, -107],
+    "zoom": 6.5,
+    "incumbents": [
+      {
+        "name": "John Doe",
+        "party": "Democrat",
+        "electionResult": true,
+        "geoVar": "60%",
+        "populationVar": -6000,
+        "district": 1,
+        "popVar2020": [23, 17, 32, 21, 7],
+        "popVar2022": [14, 27, 31, 27, 21]
+      },
+      {
+        "name": "Jane Smith",
+        "party": "Republican",
+        "electionResult": false,
+        "geoVar": "73%",
+        "populationVar": 5600,
+        "district": 3,
+        "popVar2020": [15, 22, 30, 31, 12],
+        "popVar2022": [10, 20, 42, 19, 29]
+      },
+      {
+        "name": "Bill Johnson",
+        "party": "Independent",
+        "electionResult": true,
+        "geoVar": "95%",
+        "populationVar": 2850,
+        "district": 4,
+        "popVar2020": [18, 24, 38, 17, 3],
+        "popVar2022": [25, 17, 30, 21, 17]
+      },
+      {
+        "name": "Sarah Williams",
+        "party": "Green",
+        "electionResult": false,
+        "geoVar": "57%",
+        "populationVar": -8900,
+        "district": 6,
+        "popVar2020": [26, 14, 19, 30, 11],
+        "popVar2022": [20, 18, 35, 22, 25]
+      },
+      {
+        "name": "Mary Jones",
+        "party": "Libertarian",
+        "electionResult": true,
+        "geoVar": "66%",
+        "populationVar": 9100,
+        "district": 8,
+        "popVar2020": [20, 18, 26, 24, 12],
+        "popVar2022": [14, 25, 33, 24, 24]
+      }
+    ]
+  },
+  {
+    "name": "Louisiana",
+    "coords": [31, -87.5],
+    "zoom": 7,
+    "incumbents": [
+      {
+        "name": "Bob Anderson",
+        "party": "Democrat",
+        "electionResult": true,
+        "geoVar": "93%",
+        "populationVar": -7652,
+        "district": 2,
+        "popVar2020": [17, 25, 30, 20, 8],
+        "popVar2022": [20, 17, 20, 37, 26]
+      },
+      {
+        "name": "Tom Taylor",
+        "party": "Republican",
+        "electionResult": false,
+        "geoVar": "88%",
+        "populationVar": 363,
+        "district": 3,
+        "popVar2020": [31, 14, 17, 29, 9],
+        "popVar2022": [11, 25, 34, 20, 30]
+      },
+      {
+        "name": "Kate Harris",
+        "party": "Independent",
+        "electionResult": true,
+        "geoVar": "100",
+        "populationVar": -98,
+        "district": 4,
+        "popVar2020": [23, 15, 29, 23, 10],
+        "popVar2022": [15, 30, 31, 19, 25]
+      },
+      {
+        "name": "Mike Brown",
+        "party": "Green",
+        "electionResult": false,
+        "geoVar": "81%",
+        "populationVar": 178,
+        "district": 5,
+        "popVar2020": [17, 18, 34, 26, 5],
+        "popVar2022": [13, 21, 39, 24, 23]
+      },
+      {
+        "name": "Joe Smith",
+        "party": "Libertarian",
+        "electionResult": true,
+        "geoVar": "85%",
+        "populationVar": -487,
+        "district": 7,
+        "popVar2020": [30, 16, 23, 24, 7],
+        "popVar2022": [19, 22, 37, 19, 25]
+      }
+    ]
+  },
+  {
+    "name": "Maryland",
+    "coords": [39, -74.8],
+    "zoom": 7.5,
+    "incumbents": [
+      {
+        "name": "Lisa Wilson",
+        "party": "Democrat",
+        "electionResult": false,
+        "geoVar": "80%",
+        "populationVar": -61,
+        "district": 1,
+        "popVar2020": [14, 20, 30, 30, 6],
+        "popVar2022": [21, 17, 24, 25, 13]
+      },
+      {
+        "name": "Richard Davis",
+        "party": "Republican",
+        "electionResult": true,
+        "geoVar": "89%",
+        "populationVar": 243,
+        "district": 2,
+        "popVar2020": [30, 14, 20, 27, 9],
+        "popVar2022": [11, 27, 36, 18, 28]
+      },
+      {
+        "name": "Sarah Miller",
+        "party": "Independent",
+        "electionResult": false,
+        "geoVar": "51%",
+        "populationVar": 576,
+        "district": 3,
+        "popVar2020": [17, 23, 27, 27, 6],
+        "popVar2022": [13, 20, 36, 23, 18]
+      },
+      {
+        "name": "Mark Johnson",
+        "party": "Green",
+        "electionResult": true,
+        "geoVar": "78%",
+        "populationVar": -184,
+        "district": 5,
+        "popVar2020": [14, 22, 32, 25, 7],
+        "popVar2022": [17, 25, 27, 25, 16]
+      },
+      {
+        "name": "Amy Anderson",
+        "party": "Libertarian",
+        "electionResult": false,
+        "geoVar": "89%",
+        "populationVar": 174,
+        "district": 8,
+        "popVar2020": [25, 15, 21, 30, 9],
+        "popVar2022": [14, 21, 37, 18, 30]
+      }
+    ]
+  }
+]

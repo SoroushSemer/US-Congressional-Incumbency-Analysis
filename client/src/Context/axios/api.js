@@ -5,9 +5,11 @@ const api = axios.create({
   baseURL: "http://localhost:8080/",
 });
 // api.use(cors());
-export const getState = (state, map) => api.get(`/maps/${state}/${map}`);
+export const getMap = (state, map) => api.get(`/map/${state}/${map}`);
+export const getState = (state) => api.get(`/state/${state}`);
 export const getHello = () => api.get(`/hello-world`);
 const apis = {
+  getMap,
   getState,
   getHello,
 };
