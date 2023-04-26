@@ -63,13 +63,12 @@ def calculate_neighbors(gdf, prec):
 
 def insert_demographic(gdf, demo_file, tag):
     '''
-    Function to enter a specfic demographic stat into the GDF from a file
+    Function to enter a specfic demographic stat into the GDF from a file using a id/tag
     '''
-    for col in demo_file.columns:
-        # Tags we want from demographic
-        if "_vap" not in col and col != "GEOID20": 
+    for col in demo_file.columns:                                                
+        if "_vap" not in col and col != tag: 
             demo_file.drop(col, axis=1, inplace=True)
-    # Merge the CSV and GDF on tag (Here being GEOID20)
+
     gdf = pd.merge(gdf, demo_file, on=tag)
     return gdf
 
@@ -98,8 +97,8 @@ def insert_district(gdf, districts):
     assignment = maup.assign(gdf['geometry'], districts['geometry'])       # Assign precincts to districts
     for index, item in assignment.items():                                 # Convert to correct ids by adding and adjusting a 0
         if not math.isnan(item):
-            assignment[index] = f"0{int(item) + 1}" 
-
+            assignment[index] = f"0{int(item) + 1}"                        
+ 
     gdf['DISTRICT'] = assignment 
     return gdf
 
@@ -212,7 +211,6 @@ md_2022_precincts = calc_demographic(md_2022_precincts, md_2020_precincts)
 md_2022_precincts = calculate_neighbors(md_2022_precincts, 'VTD')
 
 md_2020_precincts, md_2022_precincts = insert_incumbent(md_2020_precincts, md_2022_precincts, md_incumbent)
-# md_2020_precincts, md_2022_precincts = insert_votes(md_2020_precincts, md_2022_precincts, md_20_votes, md_22_votes)
 
 md_2020_districts.rename(columns={"CD116FP": "DISTRICT"}, inplace=True)
 md_2020_districts = clean_districts(md_2020_districts, md_incumbent, md_2020_precincts, 'GEOID20', ['Tot_2020_vap', 'Wh_2020_vap', 'His_2020_vap', 'BlC_2020_vap', 'NatC_2020_vap', 'AsnC_2020_vap', 'PacC_2020_vap'])
@@ -220,6 +218,39 @@ md_2022_districts = clean_districts(md_2022_districts, md_incumbent, md_2022_pre
 
 md_2020_precincts = md_2020_precincts.to_crs(4326)
 md_2022_precincts = md_2022_precincts.to_crs(4326)
+
+md_2020_districts.to_file('md_2020_districts.json', driver="GeoJSON")
+md_2022_districts.to_file('md_2022_districts.json', driver="GeoJSON")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# md_2020_precincts, md_2022_precincts = insert_votes(md_2020_precincts, md_2022_precincts, md_20_votes, md_22_votes)
+
 
 # print(md_2020_precincts)
 # print(md_2022_precincts)
@@ -236,6 +267,3 @@ md_2022_precincts = md_2022_precincts.to_crs(4326)
 
 # md_2020_precincts.to_file('md_2020_complete.json', driver="GeoJSON")
 # md_2022_precincts.to_file('md_2022_complete.json', driver="GeoJSON")
-
-md_2020_districts.to_file('md_2020_districts.json', driver="GeoJSON")
-md_2022_districts.to_file('md_2022_districts.json', driver="GeoJSON")
