@@ -93,7 +93,7 @@ export default function IncumbentTable() {
                 key={incumbent.district}
                 onClick={() => {
                   if (store.currentDistrict != incumbent.district) {
-                    store.setCurrentDistrict(incumbent.district);
+                    store.setCurrentDistrict("0"+incumbent.district);
                   } else {
                     store.setCurrentDistrict(null);
                   }

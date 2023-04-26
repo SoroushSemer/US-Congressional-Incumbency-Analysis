@@ -181,7 +181,7 @@ const SideBar = () => {
             )}
             {store && store.currentDistrict ? (
               <Tabs
-                defaultActiveKey="contact"
+                defaultActiveKey="profile"
                 id="uncontrolled-tab-example"
                 className="mb-3 mt-2"
               >

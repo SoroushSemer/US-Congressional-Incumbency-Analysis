@@ -23,10 +23,11 @@ const State = (props) => {
       style={(feature) => {
         var color = "none";
         var fillOpacity = 0.5;
-
+        console.log(store.currentDistrict);
+        console.log(feature.properties.DISTRICT);
         if (
           store.currentState &&
-          store.currentState.name == props.state &&
+          // store.currentState.name == props.state &&
           store.currentDistrict == feature.properties.DISTRICT
         ) {
           fillOpacity = 1.0;
