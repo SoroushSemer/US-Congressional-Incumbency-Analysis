@@ -187,6 +187,7 @@ const SideBar = () => {
               >
                 <Tab eventKey="contact" title="Summary">
                   <h5>District #{store.currentDistrict}</h5>
+
                   <ul>
                     <li>
                       <strong>Incumbent: </strong>
@@ -196,10 +197,8 @@ const SideBar = () => {
                       <strong>Population: </strong>
                       {Math.floor(Math.random() * 100000)}
                     </li>
-                    <li>
-                      <strong>White: </strong>John Doe
-                    </li>
                   </ul>
+                  <p>{store.currentState.summary}</p>
                 </Tab>
                 <Tab eventKey="home" title="Geographic Variation">
                   <div>

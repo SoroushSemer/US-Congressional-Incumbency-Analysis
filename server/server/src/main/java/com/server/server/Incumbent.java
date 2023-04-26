@@ -15,13 +15,14 @@ public class Incumbent {
     private Object coords;
     private Object incumbents;
     private int zoom;
-
+    private String summary;
     public JSONObject getIncumbent(){ 
         JSONObject json = new JSONObject();
         json.put("name", name);
         json.put("incumbents", incumbents);
         json.put("coords", coords);
         json.put("zoom", zoom);
+        json.put("summary", summary);
         return json;
     }
 

@@ -10,7 +10,7 @@ from functools import partial
 import pandas as pd
 
 from gerrychain.random import random
-random.seed(212479002)
+random.seed(6789998212)
 
 precincts = gpd.read_file("md_2020_complete.json")
 #print(precincts.head()['geometry'])
@@ -157,7 +157,7 @@ for partition in chain.with_progress_bar():
     district = district.to_crs(4326)
     print(district.head())
     # district['NEIGHBORS'] = district['NEIGHBORS'].apply(lambda x: ", ".join(x))
-    district.to_file("GeneratedPlan2.json")
+    district.to_file("GeneratedPlan3.json")
     # precincts.to_file("GeneratedPlan"+str(count)+".json")
     count+=1
     if count > 3: break
