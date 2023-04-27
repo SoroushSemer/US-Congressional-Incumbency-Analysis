@@ -22,7 +22,8 @@ const State = (props) => {
     <GeoJSON
       style={(feature) => {
         var color = "none";
-        var fillOpacity = 0.5;
+        var fillOpacity = 0.75;
+        var fillColor = 'gray';
         console.log(store.currentDistrict);
         console.log(feature.properties.DISTRICT);
         if (
@@ -31,12 +32,14 @@ const State = (props) => {
           store.currentDistrict == feature.properties.DISTRICT
         ) {
           fillOpacity = 1.0;
+          fillColor = feature.properties.COLOR;
+          color= 'black'
         } else if (store.currentState) {
           // color = "white";
           for (const incumbent of store.currentState.incumbents) {
             if (incumbent.district == feature.properties.DISTRICT) {
-              fillOpacity = 0.75;
-              color = feature.properties.COLOR;
+              // fillOpacity = 0.75;
+              fillColor = feature.properties.COLOR;
             }
           }
         }
@@ -49,7 +52,7 @@ const State = (props) => {
         // }
 
         return {
-          fillColor: feature.properties.COLOR,
+          fillColor: fillColor,
           color: color,
           fillOpacity: fillOpacity,
           // color: color_mappings[feature.properties.DISTRICT],
