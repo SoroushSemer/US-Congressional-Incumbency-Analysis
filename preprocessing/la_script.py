@@ -7,6 +7,7 @@ import math
 la_demo_20 = pd.read_csv("./Louisiana/2020/LA2020_VAP for each race.csv")
 la_adj_20 = pd.read_csv("./Louisiana/2020/la_vtd_official_2020_rook_adjacency.csv")
 la_incumbent = pd.read_csv("./Louisiana/2022/la_2022_primary_cand_data.csv")
+la_votes = pd.read_csv("./Louisiana/2020/2020_election_LA-1.csv")
 
 ''' Shapefile/GeoJSON files converted to geoDataFrames to be edited '''
 la_2020_precincts = gpd.read_file("./Louisiana/2020/2020.zip!la_2020_precincts.json") 
@@ -17,7 +18,8 @@ la_2022_districts = gpd.read_file("./Louisiana/2022/2022.zip!la_2022_districts.j
 
 def clean_table(gdf, key_arr):
     '''
-    Clean geometries with Maup and clean out bad entries from GDF. Keep valid columns like name, geometry, and id
+    Clean geometries with Maup and clean out bad entries from GDF. 
+    Keep valid columns like name, geometry, and id. Give it an area column.
     '''
     gdf = gdf.dropna()
     gdf = gdf.reset_index(drop=True)
@@ -28,6 +30,7 @@ def clean_table(gdf, key_arr):
 
     gdf['geometry'] = maup.close_gaps(gdf['geometry'])                        # Close gaps and clean up overlaps
     # gdf['geometry'] = maup.resolve_overlaps(gdf['geometry'])
+    gdf['AREA'] = gdf.area
     return gdf
 
 def calculate_neighbors(gdf, prec): 
@@ -60,13 +63,12 @@ def calculate_neighbors(gdf, prec):
 
 def insert_demographic(gdf, demo_file, tag):
     '''
-    Function to enter a specfic demographic stat into the GDF from a file
+    Function to enter a specfic demographic stat into the GDF from a file using a id/tag
     '''
     for col in demo_file.columns:
-        # Tags we want from demographic
         if "_vap" not in col and col != "GEOID20": 
             demo_file.drop(col, axis=1, inplace=True)
-    # Merge the CSV and GDF on tag (Here being GEOID20)
+
     gdf = pd.merge(gdf, demo_file, on=tag)
     return gdf
 
@@ -86,9 +88,6 @@ def calc_demographic(gdf, src):
     '''
     Function to calculate 2022 demographic data
     '''
-    # test = gpd.read_file("./Test/la_cvap_2020_2020_b.shp") 
-    # print(test) 
-
     columns = ['Tot_2020_vap', 'Wh_2020_vap', 'His_2020_vap', 'BlC_2020_vap', 'NatC_2020_vap', 'AsnC_2020_vap', 'PacC_2020_vap']
     new_columns = ['Tot_2022_vap', 'Wh_2022_vap', 'His_2022_vap', 'BlC_2022_vap', 'NatC_2022_vap', 'AsnC_2022_vap', 'PacC_2022_vap']
     gdf[new_columns] = False
@@ -116,6 +115,9 @@ def insert_district(gdf, districts):
     return gdf
 
 def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
+    '''
+    Function to insert the incumbent of a particular precinct into the gdf of both years. 
+    '''
     columns = ['HOME_PRECINCT', 'INCUMBENT', 'PARTY']
     incumbent_columns = ['Candidate', 'Party']
     tab_2020[columns] = False
@@ -140,7 +142,92 @@ def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
     
     return tab_2020, tab_2022
 
-# ------------------GENERATION--------------------#
+def insert_votes(gdf_20, gdf_22):
+    '''
+    Function to insert the votes of a particular precinct into the gdf of both years. 
+    '''
+    columns = ['REP Votes', 'DEM Votes']
+    gdf_20[columns] = False
+    gdf_22[columns] = False 
+
+    for prec_id in gdf_20['GEOID20']:
+        data_reported = la_votes.loc[(la_votes['GEOID20'] == prec_id)]                         # Check if precinct reported voting
+        if not data_reported.empty:
+            rep_votes_20 = data_reported['R_2020_sen'].iloc[0]
+            dem_votes_20 = data_reported['D_2020_sen'].iloc[0]
+            gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'REP Votes'] = int(rep_votes_20)
+            gdf_20.loc[gdf_20['GEOID20'] == prec_id, 'DEM Votes'] = int(dem_votes_20)
+
+    for prec_id in gdf_22['GEOID20']:
+        data_reported = la_votes.loc[(la_votes['GEOID20'] == prec_id)]
+        if not data_reported.empty:
+            rep_votes_22 = data_reported['R_2020_pres'].iloc[0]
+            dem_votes_22 = data_reported['D_2020_pres'].iloc[0]
+            gdf_22.loc[gdf_22['GEOID20'] == prec_id, 'REP Votes'] = int(rep_votes_22)
+            gdf_22.loc[gdf_22['GEOID20'] == prec_id, 'DEM Votes'] = int(dem_votes_22)
+
+    return gdf_20, gdf_22
+
+def clean_districts(district, tab_incumbent, precs, p_id, demo_columns):
+    '''
+    Function to clean a district json and insert incumbent, color, and total population
+    '''
+    key_arr = ['DISTRICT', 'geometry']
+    columns = ['COLOR', 'INCUMBENT', 'PARTY']
+    incumbent_columns = ['Candidate', 'Party']
+    vote_columns = ['REP Votes', 'DEM Votes']
+
+    district = district.to_crs(3857)
+
+    for col in district.columns:
+        if col not in key_arr:                                               
+            district.drop(col, axis=1, inplace=True)
+    colors = ['red', 'blue', 'green', 'yellow', 'cyan', 'magenta', 'purple', 'orange']
+    district['AREA'] = district.area
+    district[columns] = False
+    columns = columns[1:]
+    
+    color_index = 1
+    for dist_id in district['DISTRICT']:
+        district.loc[district['DISTRICT'] == f'0{color_index}', 'COLOR'] = colors[color_index - 1] 
+        color_index = color_index + 1
+
+    incumbent_only = tab_incumbent[tab_incumbent['Incumbent'] == 'Yes']
+    for dist_id in incumbent_only['District']:
+        incumbent_val = []
+        for tag in incumbent_columns:
+            incumbent_val.append(incumbent_only.loc[incumbent_only['District'] == dist_id, tag].iloc[0])
+        for i in range(len(incumbent_val)):
+            district.loc[district['DISTRICT'] == f'0{dist_id}', columns[i]] = incumbent_val[i]
+    
+    district[demo_columns] = False
+    for dist_id in district['DISTRICT']:                                                                 # This inserts the population per precinct
+        demo_vals = {demo_columns[i]: 0 for i in range(len(demo_columns))}
+        for prec_id in precs.loc[precs['DISTRICT'] == dist_id][p_id]:
+            for tag in demo_columns:
+                demo_vals[tag] = demo_vals[tag] + precs[precs[p_id] == prec_id][tag].iloc[0]
+        for vap_key in demo_vals.keys():
+            district.loc[district['DISTRICT'] == dist_id, vap_key] = int(demo_vals[vap_key])
+
+    district[vote_columns] = False
+    for dist_id in district['DISTRICT']:                                                                 # This inserts the votes per precinct
+        vote_vals = {vote_columns[i]: 0 for i in range(len(vote_columns))}
+        for prec_id in precs.loc[precs['DISTRICT'] == dist_id][p_id]:
+            for tag in vote_columns:
+                vote_vals[tag] = vote_vals[tag] + precs[precs[p_id] == prec_id][tag].iloc[0]
+        for vote_key in vote_vals.keys():
+            district.loc[district['DISTRICT'] == dist_id, vote_key] = int(vote_vals[vote_key])
+
+        
+    district = district.to_crs(4326)
+    return district
+
+def calculate_variations(data_20, data_22):
+    ''' 
+    Need to calculate area of districts and precincts. 
+    '''
+    
+    return
 
 ''' Create and generate 2020 and 2022 complete json '''
 la_2020_precincts = clean_table(la_2020_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])
@@ -153,9 +240,28 @@ la_2022_precincts = clean_table(la_2022_precincts, ['GEOID20', 'NAMELSAD20', 'ge
 la_2022_precincts = insert_district(la_2022_precincts, la_2022_districts)
 la_2022_precincts = calc_demographic(la_2022_precincts, la_2020_precincts)
 la_2022_precincts = calculate_neighbors(la_2022_precincts, 'GEOID20')
+
 la_2020_precincts, la_2022_precincts = insert_incumbent(la_2020_precincts, la_2022_precincts, la_incumbent)
+la_2020_precincts, la_2022_precincts = insert_votes(la_2020_precincts, la_2022_precincts)
+
+la_2020_districts.rename(columns={"CD116FP": "DISTRICT"}, inplace=True)
+la_2022_districts.rename(columns={"DISTRICT_I": "DISTRICT"}, inplace=True)
+la_2022_districts['DISTRICT'] = '0' + la_2022_districts['DISTRICT'].astype(str)
+
+la_2020_districts = clean_districts(la_2020_districts, la_incumbent, la_2020_precincts, 'GEOID20', ['Tot_2020_vap', 'Wh_2020_vap', 'His_2020_vap', 'BlC_2020_vap', 'NatC_2020_vap', 'AsnC_2020_vap', 'PacC_2020_vap'])
+la_2022_districts = clean_districts(la_2022_districts, la_incumbent, la_2022_precincts, 'GEOID20', ['Tot_2022_vap', 'Wh_2022_vap', 'His_2022_vap', 'BlC_2022_vap', 'NatC_2022_vap', 'AsnC_2022_vap', 'PacC_2022_vap'])
+                                                                                                
+la_2020_precincts = la_2020_precincts.to_crs(4326)
+la_2022_precincts = la_2022_precincts.to_crs(4326)
 
 print(la_2020_precincts.head())
 print(la_2022_precincts.head())
+
+print(la_2020_districts)
+print(la_2022_districts)
+
 # la_2020_precincts.to_file('la_2020_complete.json', driver="GeoJSON")
 # la_2022_precincts.to_file('la_2022_complete.json', driver="GeoJSON")
+
+# la_2020_districts.to_file('la_2020_districts.json', driver="GeoJSON")
+# la_2022_districts.to_file('la_2022_districts.json', driver="GeoJSON")
