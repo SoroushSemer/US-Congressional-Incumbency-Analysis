@@ -23,3 +23,17 @@
 .navbar ul li a:hover {
   color: #cccccc;
 } */
+.navs {
+  /* background-color: cyan; */
+  /* box-shadow: 2px; */
+  box-shadow: 10px 10px 5px lightblue;
+}
+
+.dropdowns {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1vh;
+}
+.dropdown {
+  margin-right: 1vw;
+}

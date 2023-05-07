@@ -47,6 +47,7 @@ import { GlobalStoreContext } from "../../Context/store";
 // export default IncumbentTable;
 
 import React from "react";
+// DataGrid
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -93,7 +94,7 @@ export default function IncumbentTable() {
                 key={incumbent.district}
                 onClick={() => {
                   if (store.currentDistrict != incumbent.district) {
-                    store.setCurrentDistrict("0"+incumbent.district);
+                    store.setCurrentDistrict("0" + incumbent.district);
                   } else {
                     store.setCurrentDistrict(null);
                   }
@@ -107,7 +108,9 @@ export default function IncumbentTable() {
                 <TableCell component="th" scope="row">
                   {incumbent.district}
                 </TableCell>
-                <TableCell align="left"><strong>{incumbent.name}</strong></TableCell>
+                <TableCell align="left">
+                  <strong>{incumbent.name}</strong>
+                </TableCell>
                 <TableCell align="center">{incumbent.party}</TableCell>
                 <TableCell
                   align="center"

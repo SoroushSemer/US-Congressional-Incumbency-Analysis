@@ -3,6 +3,7 @@
     Last Updated By: Soroush Semerkant
     Last Update Date: 02/16/2023
 */
+import "./Home.css";
 
 import React, { useContext, useEffect } from "react";
 import Header from "../../Components/Header/Header";
@@ -17,16 +18,18 @@ const Home = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <Container>
-      <Row>
-        <Header className="header" />
-      </Row>
+    <div>
+      {/* <Row> */}
+      <Header className="header" />
+      {/* </Row> */}
+      {/* <Row className=""> */}
       <Row>
         <MyMap />
         <SideBar />
       </Row>
-      <h4 style={{ textAlign: "right" }}>Built By Pirates</h4>
-    </Container>
+      {/* </Row> */}
+      {/* <h4 style={{ textAlign: "right" }}>Built By Pirates</h4> */}
+    </div>
   );
 };
 

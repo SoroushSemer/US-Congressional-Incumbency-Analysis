@@ -3,6 +3,7 @@
     Last Updated By: Soroush Semerkant
     Last Update Date: 02/16/2023
 */
+import "./Header.css";
 
 import React, { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../../Context/store";
@@ -24,13 +25,13 @@ const Header = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <Container className="w-100 mt-3">
-      <Row>
-        <Col xs={6}>
+    <div className="p-2 navs">
+      <Row className="w-100">
+        <Col xs={8} className="w-80">
           <h3>
             <img
               src="https://th.bing.com/th/id/R.63c10a159449db7c79783bfc32b4cb38?rik=ZsmmieKK%2b%2bmpsw&pid=ImgRaw&r=0"
-              width="100px"
+              height="60vh"
               style={{ borderRadius: "50%", cursor: "pointer" }}
               onClick={() => window.location.reload(false)}
             />
@@ -39,91 +40,106 @@ const Header = () => {
             </span>
           </h3>
         </Col>
-        <Col xs={2}>
-          <Dropdown>
-            <Dropdown.Toggle variant="primary" id="dropdown-basic">
-              {store.currentState ? store.currentState.name : "Select State"}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              <Dropdown.Item
-                onClick={() => {
-                  store.setCurrentState("Arizona");
-                }}
-              >
-                Arizona
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => store.setCurrentState("Louisiana")}>
-                Louisiana
-              </Dropdown.Item>
-              <Dropdown.Item onClick={() => store.setCurrentState("Maryland")}>
-                Maryland
-              </Dropdown.Item>
-              <Button
-                className="mx-3"
-                variant="warning"
-                onClick={() => store.setCurrentState(null)}
-              >
-                Clear Filters
-              </Button>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-        <Col xs={2}>
-          <Dropdown autoClose="outside">
-            <Dropdown.Toggle variant="success" id="dropdown-basic">
-              Select Map Filter
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu>
-              {MapTypes.map((map, index) => (
-                <Dropdown.Item key={index} onClick={() => store.toggleMap(map)}>
-                  <Checkbox checked={store.getMap(map) >= 0} />
-                  {map}
-                </Dropdown.Item>
-              ))}
-              <Button
-                className="mx-3"
-                variant="warning"
-                onClick={() => store.clearMaps()}
-              >
-                Clear Filters
-              </Button>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Col>
-
-        <Col xs={2}>
-          {store && store.currentMaps.length >= 0 ? (
-            <Dropdown autoClose="outside">
-              <Dropdown.Toggle variant="danger" id="dropdown-basic">
-                Select Map SubType
+        <Col xs={4} className="w-20">
+          <div className="dropdowns">
+            <Dropdown>
+              <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                {store.currentState ? store.currentState.name : "Select State"}
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                {MapSubTypes.map((subtype, index) => (
-                  <Dropdown.Item
-                    key={index}
-                    onClick={() => store.toggleMapSubType(subtype)}
-                  >
-                    <Checkbox checked={store.getMapSubType(subtype) >= 0} />
-                    {subtype}
-                  </Dropdown.Item>
-                ))}
-
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentState("Arizona");
+                  }}
+                >
+                  Arizona
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => store.setCurrentState("Louisiana")}
+                >
+                  Louisiana
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => store.setCurrentState("Maryland")}
+                >
+                  Maryland
+                </Dropdown.Item>
                 <Button
                   className="mx-3"
                   variant="warning"
-                  onClick={() => store.clearMapSubType()}
+                  onClick={() => store.setCurrentState(null)}
                 >
                   Clear Filters
                 </Button>
               </Dropdown.Menu>
             </Dropdown>
-          ) : (
-            <div />
-          )}
+            <Dropdown autoClose="outside">
+              <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                {store.currentState && store.currentMaps[0]
+                  ? store.currentMaps[0]
+                  : "Select Map Filter"}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                {MapTypes.map((map, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    onClick={() => store.toggleMap(map)}
+                  >
+                    <Checkbox checked={store.getMap(map) >= 0} />
+                    {map}
+                  </Dropdown.Item>
+                ))}
+                <Button
+                  className="mx-3"
+                  variant="warning"
+                  onClick={() => store.clearMaps()}
+                >
+                  Clear Filters
+                </Button>
+              </Dropdown.Menu>
+            </Dropdown>
+            {store && store.currentMaps.length >= 0 ? (
+              <Dropdown autoClose="outside">
+                <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                  {store.currentState && store.currentMapSubType[0]
+                    ? store.currentMapSubType[0]
+                    : "Select Map Subtype"}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {MapSubTypes.map((subtype, index) => (
+                    <Dropdown.Item
+                      key={index}
+                      onClick={() => store.toggleMapSubType(subtype)}
+                    >
+                      <Checkbox checked={store.getMapSubType(subtype) >= 0} />
+                      {subtype}
+                    </Dropdown.Item>
+                  ))}
+
+                  <Button
+                    className="mx-3"
+                    variant="warning"
+                    onClick={() => store.clearMapSubType()}
+                  >
+                    Clear Filters
+                  </Button>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <div />
+            )}
+          </div>
         </Col>
+        {/* <Col xs={2}>
+          
+        </Col>
+
+        <Col xs={2}>
+          
+        </Col> */}
         {/* <Button
         variant="primary"
         onClick={() => store.setCurrentState(states.arizona)}
@@ -143,7 +159,7 @@ const Header = () => {
         Maryland
       </Button>{" "} */}
       </Row>
-    </Container>
+    </div>
   );
 };
 

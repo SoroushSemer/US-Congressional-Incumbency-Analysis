@@ -39,7 +39,15 @@ const Map = () => {
   function MyMap() {
     return (
       <Col xs={store && store.currentState ? 6 : 12}>
-        <MapContainer center={coords} zoom={zoom} scrollWheelZoom={false}>
+        
+        <MapContainer
+          center={coords}
+          zoom={zoom}
+          scrollWheelZoom={false}
+          style={
+            store && store.currentState ? { width: "50%" } : { width: "100%" }
+          }
+        >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

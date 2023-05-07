@@ -4,6 +4,8 @@
     Last Update Date: 02/16/2023
 */
 
+import "./SideBar.css";
+
 import React, { useContext, useEffect } from "react";
 import { GlobalStoreContext } from "../../Context/store";
 import IncumbentTable from "../IncumbentTable/IncumbentTable";
@@ -165,7 +167,7 @@ const SideBar = () => {
   return (
     // <aside class="sidebar">
     <Col xs={store && store.currentState ? 6 : 0}>
-      <h2 style={{ textAlign: "center" }}>
+      <h2 style={{ textAlign: "center" }} className="mb-3">
         {store && store.currentState ? store.currentState.name : ""}
       </h2>
       {store && store.currentState ? (
