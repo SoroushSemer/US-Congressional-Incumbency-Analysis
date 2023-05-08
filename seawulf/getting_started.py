@@ -157,7 +157,7 @@ for partition in chain.with_progress_bar():
     district = district.to_crs(4326)
     print(district.head())
     # district['NEIGHBORS'] = district['NEIGHBORS'].apply(lambda x: ", ".join(x))
-    district.to_file("GeneratedPlan3.json")
+    district.to_file("/out/GeneratedPlan3.json")
     # precincts.to_file("GeneratedPlan"+str(count)+".json")
     count+=1
     if count > 3: break
