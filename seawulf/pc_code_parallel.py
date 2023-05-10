@@ -12,7 +12,7 @@ from gerrychain.random import random
 
 from gerrychain.constraints import no_vanishing_districts
 
-
+import multiprocessing as mp
 import json
 # from random import randint
 
@@ -37,7 +37,7 @@ def export_plan(initial_partition, partition, precincts, description):
         precincts.loc[precincts['DISTRICT'] == i[0],"PARTY"] = incumbent_dist_map[i[0]][1]
         
     
-    #precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
+    precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
 
     district = precincts.dissolve('DISTRICT')
     republican = partition['election'].counts('Republican')
@@ -65,13 +65,13 @@ def export_plan(initial_partition, partition, precincts, description):
     for i in partition['area'].items():
         district.loc[i[0],"AREA"] = i[1]
     
-    #del district['NEIGHBORS']
+    del district['NEIGHBORS']
     del district['GEOID20']
     del district['NAMELSAD20']
     del district['HOME_PRECINCT']
  
 
-    district.to_file("./out/GeneratedPlan_"+description+".json")
+    district.to_file("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/out/GeneratedPlan_"+description+".json")
     print("Generated", description)
 
 def boxplot(df):
@@ -144,131 +144,129 @@ def calc_var(initial_partition, new_partition):
         
     return vars     
 
+initial_partition = None
+step = 100
+precincts = gpd.read_file("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/Maryland/md_2020_precincts.json")
 
-def run_recom(precincts_filename, ensemble_size, steps):
-    #read precincts file into gpd
-    precincts = gpd.read_file(precincts_filename)
+#create graph
+graph = Graph.from_geodataframe(
+    precincts,ignore_errors=True
+)
 
-    #create graph
-    graph = Graph.from_geodataframe(
-        precincts,ignore_errors=True
-    )
+print("Maryland 2020 Graph Created")
+print("num nodes:",graph.number_of_nodes())
 
-    print("Maryland 2020 Graph Created")
-    print("num nodes:",graph.number_of_nodes())
+#create election object for the r/d votes
+election = Election("election", {"Republican": "REP Votes", "Democratic": "DEM Votes"}, alias="election")
 
-    #create election object for the r/d votes
-    election = Election("election", {"Republican": "REP Votes", "Democratic": "DEM Votes"}, alias="election")
+#create partitions with vap, races, election
 
-    #create partitions with vap, races, election
-    initial_partition = Partition(
-        graph,
-        assignment="DISTRICT",
-        updaters={
-            "cut_edges": cut_edges,
-            "population": Tally("Tot_2020_vap", alias="population", dtype=int),
-            "wh_population": Tally("Wh_2020_vap", alias="wh_population", dtype=int),
-            "his_population": Tally("His_2020_vap", alias="his_population", dtype=int),
-            "blc_population": Tally("BlC_2020_vap", alias="blc_population", dtype=int),
-            "natc_population": Tally("NatC_2020_vap", alias="natc_population", dtype=int),
-            "asnc_population": Tally("AsnC_2020_vap", alias="asnc_population", dtype=int),
-            "pacc_population": Tally("PacC_2020_vap", alias="pacc_population", dtype=int),
-            "area": Tally("AREA", alias="area", dtype=float),
-            
-            "election": election
-        }
-    )
-
-
-    #create ideal populations of mean
-    ideal_population = sum(initial_partition["population"].values()) / len(initial_partition)
-
-
-    #establish proposal for recom
-    proposal = partial(recom,
-                    pop_col="Tot_2020_vap",
-                    pop_target=ideal_population,
-                    epsilon=0.02,
-                    node_repeats=1
-                    )
-
-    #create contraint for compactness bound
-    compactness_bound = constraints.UpperBound(
-        lambda p: len(p["cut_edges"]),
-        2*len(initial_partition["cut_edges"])
-    )
-
-    #create constraint for population to be within param2 of the ideal population
-    pop_constraint = constraints.within_percent_of_ideal_population(initial_partition, 0.20)
-
-
-    # election_results = []
-    box_whiskers = {'election':[], 'popVar':[], 'whVar':[], 'hisVar':[], 'blcVar':[], 'natcVar':[], 'asncVar':[], 'paccVar':[], 'areaVar':[]}
-    republican_favored_val = 2
-    republican_favored = None
-    democrat_favored_val = 8
-    democrat_favored = None
-    high_pop_var_val = 0.534
-    high_pop_var = None
-    high_geo_var_va = 0.930
-    high_geo_var = None
-    
-    for seed in range(ensemble_size):
+initial_partition = Partition(
+    graph,
+    assignment="DISTRICT",
+    updaters={
+        "cut_edges": cut_edges,
+        "population": Tally("Tot_2020_vap", alias="population", dtype=int),
+        "wh_population": Tally("Wh_2020_vap", alias="wh_population", dtype=int),
+        "his_population": Tally("His_2020_vap", alias="his_population", dtype=int),
+        "blc_population": Tally("BlC_2020_vap", alias="blc_population", dtype=int),
+        "natc_population": Tally("NatC_2020_vap", alias="natc_population", dtype=int),
+        "asnc_population": Tally("AsnC_2020_vap", alias="asnc_population", dtype=int),
+        "pacc_population": Tally("PacC_2020_vap", alias="pacc_population", dtype=int),
+        "area": Tally("AREA", alias="area", dtype=float),
         
-        if seed %100 ==0: 
-            print(seed)
-            random.seed(seed+5)
-        if seed % 1000 == 0:
-             with open('./tempout/'+str(seed)+'.txt', 'w') as f:
-                 f.write("Rep: "+str(republican_favored_val)+"\n")
-                 f.write("Dem: "+str(democrat_favored_val)+"\n")
-                 f.write("PopVar: "+str(high_pop_var_val)+"\n")
-                 f.write("GeoVar: "+str(high_geo_var_va)+"\n")
-        # random.seed(seed*17)
-        #create chain
-        chain = MarkovChain(
+        "election": election
+    }
+)
+
+#create ideal populations of mean
+ideal_population = sum(initial_partition["population"].values()) / len(initial_partition)
+
+
+#establish proposal for recom
+proposal = partial(recom,
+                pop_col="Tot_2020_vap",
+                pop_target=ideal_population,
+                epsilon=0.02,
+                node_repeats=1
+                )
+    #create contraint for compactness bound
+compactness_bound = constraints.UpperBound(
+    lambda p: len(p["cut_edges"]),
+    2*len(initial_partition["cut_edges"])
+)
+
+#create constraint for population to be within param2 of the ideal population
+pop_constraint = constraints.within_percent_of_ideal_population(initial_partition, 0.20)
+
+
+def gen_plan(seed):
+    
+    random.seed(seed)
+    chain = MarkovChain(
             proposal=proposal,
             constraints=[no_vanishing_districts, pop_constraint, compactness_bound],
             accept=accept.always_accept,
             initial_state=initial_partition,
-            total_steps=steps
+            total_steps=step
         )
-        count = 1
-        for partition in chain:
-            if(count < steps):
-                count+=1
-                continue
-            box_whiskers['election'].append(sorted(partition['election'].percents('Republican')))
-            
-            vars = calc_var(initial_partition, partition)
-            box_whiskers['popVar'].append(sorted(vars['popVar']))
-            box_whiskers['whVar'].append(sorted(vars['whVar']))
-            box_whiskers['hisVar'].append(sorted(vars['hisVar']))
-            box_whiskers['blcVar'].append(sorted(vars['blcVar']))
-            box_whiskers['natcVar'].append(sorted(vars['natcVar']))
-            box_whiskers['asncVar'].append(sorted(vars['asncVar']))
-            box_whiskers['paccVar'].append(sorted(vars['paccVar']))
-            box_whiskers['areaVar'].append(sorted(vars['areaVar']))
-
-            # partition.plot()
-            if(partition['election'].seats('Republican')>republican_favored_val):
-                republican_favored_val = partition['election'].seats('Republican')
-                republican_favored = partition
-            elif(partition['election'].seats('Democratic')>democrat_favored_val):
-                democrat_favored_val = partition['election'].seats('Democratic')
-                democrat_favored = partition
-            
-            if(max(vars['popVar']) > high_pop_var_val):
-                high_pop_var_val = max(vars['popVar'])
-                high_pop_var = partition
-            if(max(vars['areaVar']) > high_geo_var_va):
-                high_geo_var_va = max(vars['areaVar'])
-                high_geo_var = partition
+    count = 1
+    vars = None
+    election = None
+    for partition in chain.with_progress_bar():
+        if(count < step):
+            count+=1
+            continue
+        vars = calc_var(initial_partition, partition)
+        election = sorted(partition['election'].percents('Republican'))
+        final_partition = partition
+        # partition.plot()
+        if(partition['election'].seats('Republican')>2):
+            export_plan(initial_partition, partition, precincts, "REP_Favored ("+str(partition['election'].seats('Republican'))+" wins)")       
     
-    export_plan(initial_partition, republican_favored, precincts, "REP_Favored ("+str(republican_favored_val)+" wins)")       
-    export_plan(initial_partition, democrat_favored, precincts, "DEM_Favored ("+str(democrat_favored_val)+" wins)")
-    export_plan(initial_partition, high_pop_var, precincts, "High_Pop_Var ("+str(high_pop_var_val)+" max)")
-    export_plan(initial_partition, high_geo_var, precincts, "High_Geo_Var ("+str(high_geo_var_va)+" max)")
+        # elif(partition['election'].seats('Democratic')>7):
+        #     export_plan(initial_partition, partition, precincts, "DEM_Favored ("+str(partition['election'].seats('Democratic'))+" wins)")
+    
+        if(max(vars['popVar']) > 0.6):
+            export_plan(initial_partition, partition, precincts, "High_Pop_Var ("+str(max(vars['popVar']))+" max)")
+    
+        if(max(vars['areaVar']) > 0.93):
+            export_plan(initial_partition, partition, precincts, "High_Geo_Var ("+str(max(vars['areaVar']))+" max)")
+
+    return vars, election
+    
+
+def run_recom(precincts_filename, ensemble_size, steps):
+    #read precincts file into gpd
+    
+
+
+ 
+
+
+
+    # election_results = []
+    box_whiskers = {'election':[], 'popVar':[], 'whVar':[], 'hisVar':[], 'blcVar':[], 'natcVar':[], 'asncVar':[], 'paccVar':[], 'areaVar':[]}
+
+
+    p = mp.Pool(processes = 4)
+    results = [p.apply_async(gen_plan, args =(seed,)) for seed in range(ensemble_size)]
+    for result in results:
+        vars, percRepublican = result.get()
+        box_whiskers['election'].append(percRepublican)
+        
+        
+        box_whiskers['popVar'].append(sorted(vars['popVar']))
+        box_whiskers['whVar'].append(sorted(vars['whVar']))
+        box_whiskers['hisVar'].append(sorted(vars['hisVar']))
+        box_whiskers['blcVar'].append(sorted(vars['blcVar']))
+        box_whiskers['natcVar'].append(sorted(vars['natcVar']))
+        box_whiskers['asncVar'].append(sorted(vars['asncVar']))
+        box_whiskers['paccVar'].append(sorted(vars['paccVar']))
+        box_whiskers['areaVar'].append(sorted(vars['areaVar']))
+
+        
+    p.close()
 
     election_data = pd.DataFrame(data = box_whiskers['election'])      
     population_data = pd.DataFrame(data = box_whiskers['popVar'])
@@ -302,11 +300,49 @@ def run_recom(precincts_filename, ensemble_size, steps):
         "paccVar":paccBoxplotData,
         "areaVar":areaBoxplotData
     }
-    with open('./out/ensemble.json', 'w') as f:
+    with open('C:/Users/fahee/Desktop/CSE-416-Project/seawulf/out/ensemble.json', 'w') as f:
         json.dump(ensembleData, f)
 
 
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Draw 50% line
+    ax.axhline(0.5, color="#cccccc")
+
+    # Draw boxplot
+    population_data.boxplot(ax=ax, positions=range(len(population_data.columns)))
+
+    plt.plot(population_data.iloc[0], "ro")
+
+    # Annotate
+    ax.set_title("Comparing the 2020 plan to an ensemble")
+    ax.set_ylabel("Population Variation (2020 v. Ensemble)")
+    ax.set_xlabel("Sorted districts")
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Draw 50% line
+    ax.axhline(0.5, color="#cccccc")
+
+    # Draw boxplot
+    area_data.boxplot(ax=ax, positions=range(len(area_data.columns)))
+
+    plt.plot(area_data.iloc[0], "ro")
+
+    # Annotate
+    ax.set_title("Comparing the 2020 plan to an ensemble")
+    ax.set_ylabel("Geographic Variation (2020 v. Ensemble)")
+    ax.set_xlabel("Sorted districts")
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+
+    plt.show()
 
 
 
-run_recom("./Maryland/md_2020_precincts.json",100,10)
+if __name__ == '__main__':
+    run_recom("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/Maryland/md_2020_precincts.json",10,1000)

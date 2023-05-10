@@ -37,7 +37,7 @@ def export_plan(initial_partition, partition, precincts, description):
         precincts.loc[precincts['DISTRICT'] == i[0],"PARTY"] = incumbent_dist_map[i[0]][1]
         
     
-    #precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
+    precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
 
     district = precincts.dissolve('DISTRICT')
     republican = partition['election'].counts('Republican')
@@ -65,13 +65,13 @@ def export_plan(initial_partition, partition, precincts, description):
     for i in partition['area'].items():
         district.loc[i[0],"AREA"] = i[1]
     
-    #del district['NEIGHBORS']
+    del district['NEIGHBORS']
     del district['GEOID20']
     del district['NAMELSAD20']
     del district['HOME_PRECINCT']
  
 
-    district.to_file("./out/GeneratedPlan_"+description+".json")
+    district.to_file("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/out/GeneratedPlan_"+description+".json")
     print("Generated", description)
 
 def boxplot(df):
@@ -218,12 +218,6 @@ def run_recom(precincts_filename, ensemble_size, steps):
         if seed %100 ==0: 
             print(seed)
             random.seed(seed+5)
-        if seed % 1000 == 0:
-             with open('./tempout/'+str(seed)+'.txt', 'w') as f:
-                 f.write("Rep: "+str(republican_favored_val)+"\n")
-                 f.write("Dem: "+str(democrat_favored_val)+"\n")
-                 f.write("PopVar: "+str(high_pop_var_val)+"\n")
-                 f.write("GeoVar: "+str(high_geo_var_va)+"\n")
         # random.seed(seed*17)
         #create chain
         chain = MarkovChain(
@@ -234,7 +228,7 @@ def run_recom(precincts_filename, ensemble_size, steps):
             total_steps=steps
         )
         count = 1
-        for partition in chain:
+        for partition in chain.with_progress_bar():
             if(count < steps):
                 count+=1
                 continue
@@ -302,11 +296,49 @@ def run_recom(precincts_filename, ensemble_size, steps):
         "paccVar":paccBoxplotData,
         "areaVar":areaBoxplotData
     }
-    with open('./out/ensemble.json', 'w') as f:
+    with open('C:/Users/fahee/Desktop/CSE-416-Project/seawulf/out/ensemble.json', 'w') as f:
         json.dump(ensembleData, f)
 
 
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Draw 50% line
+    ax.axhline(0.5, color="#cccccc")
+
+    # Draw boxplot
+    population_data.boxplot(ax=ax, positions=range(len(population_data.columns)))
+
+    plt.plot(population_data.iloc[0], "ro")
+
+    # Annotate
+    ax.set_title("Comparing the 2020 plan to an ensemble")
+    ax.set_ylabel("Population Variation (2020 v. Ensemble)")
+    ax.set_xlabel("Sorted districts")
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+
+    plt.show()
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    # Draw 50% line
+    ax.axhline(0.5, color="#cccccc")
+
+    # Draw boxplot
+    area_data.boxplot(ax=ax, positions=range(len(area_data.columns)))
+
+    plt.plot(area_data.iloc[0], "ro")
+
+    # Annotate
+    ax.set_title("Comparing the 2020 plan to an ensemble")
+    ax.set_ylabel("Geographic Variation (2020 v. Ensemble)")
+    ax.set_xlabel("Sorted districts")
+    ax.set_ylim(0, 1)
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1])
+
+    plt.show()
 
 
 
-run_recom("./Maryland/md_2020_precincts.json",100,10)
+
+run_recom("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/Maryland/md_2020_precincts.json",10000,100)

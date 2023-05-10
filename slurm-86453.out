@@ -1,0 +1,19 @@
+/gpfs/software/Anaconda/envs/gerrychain/lib/python3.11/site-packages/gerrychain/graph/adjacency.py:21: ShapelyDeprecationWarning: Setting custom attributes on geometry objects is deprecated, and will raise an AttributeError in Shapely 2.0
+  geometries[i].id = i
+/gpfs/software/Anaconda/envs/gerrychain/lib/python3.11/site-packages/gerrychain/graph/adjacency.py:23: ShapelyDeprecationWarning: STRtree will be changed in 2.0.0 and will not be compatible with versions < 2.
+  tree = STRtree(geometries)
+/gpfs/software/Anaconda/envs/gerrychain/lib/python3.11/site-packages/gerrychain/graph/graph.py:162: UserWarning: Geometry is in a geographic CRS. Results from 'area' are likely incorrect. Use 'GeoSeries.to_crs()' to re-project geometries to a projected CRS before this operation.
+
+  areas = df.geometry.area.to_dict()
+Maryland 2020 Graph Created
+num nodes: 2042
+0
+Traceback (most recent call last):
+  File "/gpfs/projects/CSE416/Pirates/seawulf_code.py", line 304, in <module>
+    run_recom("./Maryland/md_2020_precincts.json",10,10000)
+  File "/gpfs/projects/CSE416/Pirates/seawulf_code.py", line 192, in run_recom
+    for partition in chain.with_progress_bar():
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/gpfs/software/Anaconda/envs/gerrychain/lib/python3.11/site-packages/gerrychain/chain.py", line 85, in with_progress_bar
+    from tqdm.auto import tqdm
+ModuleNotFoundError: No module named 'tqdm'
