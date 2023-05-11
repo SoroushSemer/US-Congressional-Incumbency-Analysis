@@ -121,21 +121,19 @@ def insert_incumbent(tab_2020, tab_2022, tab_incumbent):
     tab_2022[columns] = False
     incumbent_only = tab_incumbent[tab_incumbent['Incumbent'] == 'Yes']    # New dataframe with only incumbents 
     columns = columns[1:] 
-    home_set = False
 
     for dist_id in incumbent_only['District']:
         incumbent_val = []
         for tag in incumbent_columns:
             incumbent_val.append(incumbent_only.loc[incumbent_only['District'] == dist_id, tag].iloc[0])
         for i in range(len(incumbent_val)):
-            if not home_set:
-                home_20_id = tab_2020.loc[tab_2020['DISTRICT'] == f'0{dist_id}'].iloc[0]['GEOID20']
-                tab_2020.loc[tab_2020['GEOID20'] == home_20_id, 'HOME_PRECINCT'] = True
-                tab_2022.loc[tab_2022['GEOID20'] == home_20_id, 'HOME_PRECINCT'] = True
-                home_set = True
             tab_2020.loc[tab_2020['DISTRICT'] == f'0{dist_id}', columns[i]] = incumbent_val[i]
             tab_2022.loc[tab_2022['DISTRICT'] == f'0{dist_id}', columns[i]] = incumbent_val[i]
-        home_set = False
+        
+        home_20_index = round(len(tab_2020.loc[tab_2020['DISTRICT'] == f'0{dist_id}']) / 2)
+        home_20_id = tab_2020.iloc[home_20_index]['GEOID20']
+        tab_2020.loc[tab_2020['GEOID20'] == home_20_id, 'HOME_PRECINCT'] = True
+        tab_2022.loc[tab_2022['GEOID20'] == home_20_id, 'HOME_PRECINCT'] = True
     
     return tab_2020, tab_2022
 
