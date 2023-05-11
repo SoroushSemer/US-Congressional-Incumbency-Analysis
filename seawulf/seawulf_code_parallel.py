@@ -67,7 +67,7 @@ ideal_population = sum(initial_partition["population"].values()) / len(initial_p
 proposal = partial(recom,
                 pop_col="Tot_2020_vap",
                 pop_target=ideal_population,
-                epsilon=0.02,
+                epsilon=0.2,
                 node_repeats=1
                 )
     #create contraint for compactness bound
@@ -92,14 +92,13 @@ def export_plan(initial_partition, partition, precincts, description):
         
     for i in range(len(temp.nodes)):
         if(temp.nodes[i]['HOME_PRECINCT']):
-            incumbent_dist_map[partition.assignment[i]] = (temp.nodes[i]['INCUMBENT'], temp.nodes[i]['PARTY'])
+            incumbent_dist_map[partition.assignment[i]] = temp.nodes[i]['INCUMBENT']
         node_in_geo = precincts[precincts['GEOID20'] == temp.nodes[i]['GEOID20']].iloc[0]
         if(partition.assignment[i] != node_in_geo.DISTRICT):
             precincts.loc[precincts['GEOID20'] == temp.nodes[i]['GEOID20'],"DISTRICT"] = partition.assignment[i]
     
     for i in partition['population'].items():
-        precincts.loc[precincts['DISTRICT'] == i[0],"INCUMBENT"] = incumbent_dist_map[i[0]][0]
-        precincts.loc[precincts['DISTRICT'] == i[0],"PARTY"] = incumbent_dist_map[i[0]][1]
+        precincts.loc[precincts['DISTRICT'] == i[0],"INCUMBENT"] = incumbent_dist_map[i[0]]
         
     
     precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
@@ -113,6 +112,10 @@ def export_plan(initial_partition, partition, precincts, description):
         district.loc[i[0],"Tot_2020_vap"] = i[1]
         district.loc[i[0],"REP Votes"] = republican[index]
         district.loc[i[0],"DEM Votes"] = democrat[index]
+        if(democrat[index] > republican[index]):
+            district.loc[i[0],"PARTY"] = "DEM"
+        else:
+            district.loc[i[0],"PARTY"] = "REP"
         district.loc[i[0],"COLOR"] = colors[index]
         
     for i in partition['wh_population'].items():

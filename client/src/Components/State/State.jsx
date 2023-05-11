@@ -21,28 +21,82 @@ const State = (props) => {
   return (
     <GeoJSON
       style={(feature) => {
-        var color = "none";
+        var color = "gray";
         var fillOpacity = 0.75;
-        var fillColor = 'gray';
-        console.log(store.currentDistrict);
-        console.log(feature.properties.DISTRICT);
+        var fillColor = "white";
+        // console.log(store.currentDistrict);
+        // console.log(feature.properties.DISTRICT);s
         if (
           store.currentState &&
           // store.currentState.name == props.state &&
-          store.currentDistrict == feature.properties.DISTRICT
+          store.currentDistrict == feature.properties.INCUMBENT
         ) {
           fillOpacity = 1.0;
+          color = "black";
+        }
+        if (
+          feature.properties.PARTY &&
+          feature.properties.PARTY != "N/A" &&
+          feature.properties.INCUMBENT != "0"
+        ) {
           fillColor = feature.properties.COLOR;
-          color= 'black'
-        } else if (store.currentState) {
-          // color = "white";
-          for (const incumbent of store.currentState.incumbents) {
-            if (incumbent.district == feature.properties.DISTRICT) {
-              // fillOpacity = 0.75;
-              fillColor = feature.properties.COLOR;
-            }
+        }
+
+        // } else if (store.currentState) {
+        //   // color = "white";
+        //   for (const incumbent of store.currentState.incumbents) {
+        //     if (incumbent.district == feature.properties.DISTRICT) {
+        //       // fillOpacity = 0.75;
+        //       fillColor = feature.properties.COLOR;
+        //     }
+        //   }
+        // }
+        if (
+          store &&
+          store.currentMapSubType &&
+          store.currentMapSubType[0] == "Election Vote"
+        ) {
+          color = "gray";
+          if (
+            store.currentState &&
+            // store.currentState.name == props.state &&
+            store.currentDistrict == feature.properties.INCUMBENT
+          ) {
+            color = "black";
+          }
+          if (
+            parseInt(feature.properties["REP Votes"]) >
+            parseInt(feature.properties["DEM Votes"])
+          ) {
+            fillColor = "red";
+          } else {
+            fillColor = "blue";
           }
         }
+        if (
+          store &&
+          store.currentMapSubType &&
+          store.currentMapSubType[0] == "Population Heat Map"
+        ) {
+          color = "gray";
+          if (
+            store.currentState &&
+            // store.currentState.name == props.state &&
+            store.currentDistrict == feature.properties.INCUMBENT
+          ) {
+            color = "black";
+          }
+          let scalar =
+            1.0 -
+            (parseFloat(feature.properties["Tot_2020_vap"]) - 550000) /
+              200000.0;
+          let red = 0 * scalar;
+          let green = 255 * scalar;
+          let blue = 0 * scalar;
+          fillColor = `rgb(${red}, ${green}, ${blue})`;
+          fillOpacity = 1;
+        }
+
         // var fillColor;
         // fillColor = color_mappings[feature.properties.INCUMBENT];
         // console.log(fillColor);
@@ -87,8 +141,8 @@ const State = (props) => {
           //     });
           //   },
           click: () => {
-            if (store.getIncumbent(feature.properties.DISTRICT) != null) {
-              store.setCurrentDistrict(feature.properties.DISTRICT);
+            if (store.getIncumbent(feature.properties.INCUMBENT) != null) {
+              store.setCurrentDistrict(feature.properties.INCUMBENT);
             }
           },
         });
@@ -97,9 +151,19 @@ const State = (props) => {
           `<div><p>District: ${feature.properties.DISTRICT}</p><p>Incumbent: ${
             feature.properties.INCUMBENT == "0"
               ? "NONE"
-              : feature.properties.INCUMBENT
-          }</p><p>Party: ${
-            feature.properties.PARTY == "0" ? "N/A" : feature.properties.PARTY
+              : feature.properties.INCUMBENT +
+                " (" +
+                feature.properties.PARTY +
+                ")"
+          }</p><p>Winning Party: ${
+            parseInt(feature.properties["REP Votes"]) <
+            parseInt(feature.properties["DEM Votes"])
+              ? "DEM"
+              : "REP"
+          }</p><p>Total Population (VAP): ${
+            feature.properties["Tot_2020_vap"]
+              ? feature.properties["Tot_2020_vap"].toLocaleString("en-US")
+              : "N/A"
           }</p>`,
           {
             // permanent: true,

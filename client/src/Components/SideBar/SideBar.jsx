@@ -16,7 +16,7 @@ import Tab from "react-bootstrap/Tab";
 import ReactApexChart from "react-apexcharts";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
-
+import Dropdown from "react-bootstrap/Dropdown";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -25,6 +25,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Checkbox } from "@mui/material";
+
+const boxw = require("../../Data/ensemble.json");
+
 // const series = [
 //   {
 //     name: "box",
@@ -83,81 +86,6 @@ import { Checkbox } from "@mui/material";
 //     ],
 //   },
 // ];
-const series = [
-  {
-    name: "box",
-    type: "boxPlot",
-    data: [
-      {
-        x: 0,
-        y: [
-          0.0707981220657277, 0.14829796577321397, 0.15679091744732773,
-          0.18552720413191467, 0.21980800046829155,
-        ],
-      },
-      {
-        x: 1,
-        y: [
-          0.14342597998972706, 0.17566282904731728, 0.1822335989760682,
-          0.19791588074230668, 0.24734107360424282,
-        ],
-      },
-      {
-        x: 2,
-        y: [
-          0.1706257294191579, 0.22240471954709914, 0.23534598797436102,
-          0.24326000191928165, 0.2619630955203547,
-        ],
-      },
-      {
-        x: 3,
-        y: [
-          0.24562535718312267, 0.24995657551598, 0.2594128160694649,
-          0.28994814688013604, 0.3200253244259624,
-        ],
-      },
-      {
-        x: 4,
-        y: [
-          0.25360027047500033, 0.2972646840569902, 0.32340207799102116,
-          0.36194283215619255, 0.3788581823134016,
-        ],
-      },
-      {
-        x: 5,
-        y: [
-          0.3319431204321576, 0.3657194007194984, 0.38048866102099704,
-          0.39486695190340476, 0.4314221266754613,
-        ],
-      },
-      {
-        x: 6,
-        y: [
-          0.36941179114877165, 0.39783494959096843, 0.479804655727078,
-          0.48657583857892905, 0.4930927596236225,
-        ],
-      },
-      {
-        x: 7,
-        y: [
-          0.48190808609656777, 0.5177698826529322, 0.5506223680113993,
-          0.5659428516474725, 0.5750637639548983,
-        ],
-      },
-    ],
-  },
-  {
-    name: "outliers",
-    type: "scatter",
-    data: [
-      { x: 0, y: 0.07296047701147072 },
-      { x: 0, y: 0.0707981220657277 },
-      { x: 1, y: 0.24734107360424282 },
-      { x: 2, y: 0.1706257294191579 },
-      { x: 2, y: 0.17209823939700752 },
-    ],
-  },
-];
 const optionsBoxPlot = {
   chart: {
     type: "boxPlot",
@@ -230,7 +158,7 @@ const data = [
 
 const SideBar = () => {
   const { store } = useContext(GlobalStoreContext);
-
+  let series = boxw[store.currentEnsembleAnalysis];
   var options = {
     chart: {
       id: "basic-bar",
@@ -270,7 +198,7 @@ const SideBar = () => {
                 className="mb-3 mt-2"
               >
                 <Tab eventKey="contact" title="Summary">
-                  <h5>District #{store.currentDistrict}</h5>
+                  <h5>{store.currentDistrict}</h5>
 
                   <ul>
                     <li>
@@ -279,11 +207,15 @@ const SideBar = () => {
                     </li>
                     <li>
                       <strong>2020 Population: </strong>
-                      {store.getCurrentIncumbent().popVar2020[0]}
+                      {store
+                        .getCurrentIncumbent()
+                        .popVar2020[0].toLocaleString()}
                     </li>
                     <li>
                       <strong>2022 Population: </strong>
-                      {store.getCurrentIncumbent().popVar2022[0]}
+                      {store
+                        .getCurrentIncumbent()
+                        .popVar2022[0].toLocaleString()}
                     </li>
                   </ul>
                 </Tab>
@@ -419,12 +351,89 @@ const SideBar = () => {
               </Table>
             </TableContainer>
             <h4 className="mt-2">Ensemble Analysis</h4>
-            <ReactApexChart
-              options={optionsBoxPlot}
-              series={series}
-              type="boxPlot"
-              height={350}
-            />
+            <Dropdown>
+              <Dropdown.Toggle variant="primary" id="dropdown-basic">
+                {store.currentEnsembleAnalysis
+                  ? store.currentEnsembleAnalysis
+                  : "Select Feature"}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("election");
+                  }}
+                >
+                  Election Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("popVar");
+                  }}
+                >
+                  Population Variation (VAP)
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("whVar");
+                  }}
+                >
+                  White Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("hisVar");
+                  }}
+                >
+                  Hispanic Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("blcVar");
+                  }}
+                >
+                  Black Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("natcVar");
+                  }}
+                >
+                  Native American Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("asncVar");
+                  }}
+                >
+                  Asian Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("paccVar");
+                  }}
+                >
+                  Pacific Islander Population Variation
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    store.setCurrentEnsembleAnalysis("areaVar");
+                  }}
+                >
+                  Geographic Variation
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            {store.currentEnsembleAnalysis ? (
+              <ReactApexChart
+                options={optionsBoxPlot}
+                series={series}
+                type="boxPlot"
+                height={350}
+              />
+            ) : (
+              <div />
+            )}
           </Tab>
         </Tabs>
       ) : (

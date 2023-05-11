@@ -18,8 +18,9 @@ function GlobalStoreContextProvider(props) {
     currentDistrict: null,
     currentMaps: ["2022 District Plan"],
     currentMapGeoJSONs: [],
-    currentMapSubType: [],
+    currentMapSubType: ["Incumbent"],
     states: null,
+    currentEnsembleAnalysis: "election",
   });
 
   //BEGINNNING OF STORE FUNCTIONS: TEMPLATE BELOW
@@ -69,6 +70,9 @@ function GlobalStoreContextProvider(props) {
   };
 
   store.setCurrentDistrict = function (district) {
+    if (district == store.currentDistrict) {
+      district = null;
+    }
     setStore({
       ...store,
       currentState: store.currentState,
@@ -81,7 +85,7 @@ function GlobalStoreContextProvider(props) {
       return null;
     }
     for (const incumbent of store.currentState.incumbents) {
-      if (incumbent.district == store.currentDistrict) {
+      if (incumbent.name == store.currentDistrict) {
         return incumbent;
       }
     }
@@ -92,7 +96,7 @@ function GlobalStoreContextProvider(props) {
       return null;
     }
     for (const incumbent of store.currentState.incumbents) {
-      if (incumbent.district == district) {
+      if (incumbent.name == district) {
         return incumbent;
       }
     }
@@ -142,18 +146,10 @@ function GlobalStoreContextProvider(props) {
     return index;
   };
   store.toggleMapSubType = function (subtype) {
-    var newArray = store.currentMapSubType;
-    var index = newArray.indexOf(subtype);
-    if (index < 0) {
-      newArray.push(subtype);
-      setStore({ ...store, currentMapSubType: newArray });
-    } else {
-      newArray.splice(index, 1);
-      setStore({ ...store, currentMapSubType: newArray });
-    }
+    setStore({ ...store, currentMapSubType: [subtype] });
   };
   store.clearMapSubType = function () {
-    setStore({ ...store, currentMapSubType: [] });
+    setStore({ ...store, currentMapSubType: ["Incumbent"] });
   };
   store.getMapSubType = function (subtype) {
     var index = store.currentMapSubType.indexOf(subtype);
@@ -170,6 +166,9 @@ function GlobalStoreContextProvider(props) {
       }
     }
     asyncGetStates();
+  };
+  store.setCurrentEnsembleAnalysis = function (ensembleAnalysis) {
+    setStore({ ...store, currentEnsembleAnalysis: ensembleAnalysis });
   };
 
   //should not need to edit below

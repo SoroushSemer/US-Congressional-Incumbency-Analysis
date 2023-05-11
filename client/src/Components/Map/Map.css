@@ -1,9 +1,10 @@
 .leaflet-container {
   /* width: 50%; */
-  height: 90vh;
+  height: 88svh;
   width: 100%;
   background-color: darkslategray;
   color: darkslategray;
+  margin: 10px;
   /* position: absolute;
   left: 0;
   top: 10vh;

@@ -341,4 +341,4 @@ def run_recom(precincts_filename, ensemble_size, steps):
 
 
 
-run_recom("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/Maryland/md_2020_precincts.json",10000,100)
+run_recom("C:/Users/fahee/Desktop/CSE-416-Project/seawulf/Maryland/md_2020_precincts.json",1000,10)

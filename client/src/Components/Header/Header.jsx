@@ -25,9 +25,9 @@ const Header = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <div className="p-2 navs">
+    <div className="p-2 pt-3  navs">
       <Row className="w-100">
-        <Col xs={8} className="w-80">
+        <Col xs={8} className="img w-80">
           <h3>
             <img
               src="https://th.bing.com/th/id/R.63c10a159449db7c79783bfc32b4cb38?rik=ZsmmieKK%2b%2bmpsw&pid=ImgRaw&r=0"
@@ -103,9 +103,7 @@ const Header = () => {
             {store && store.currentMaps.length >= 0 ? (
               <Dropdown autoClose="outside">
                 <Dropdown.Toggle variant="primary" id="dropdown-basic">
-                  {store.currentState && store.currentMapSubType[0]
-                    ? store.currentMapSubType[0]
-                    : "Select Map Subtype"}
+                  {"Select Map Color Scheme"}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>

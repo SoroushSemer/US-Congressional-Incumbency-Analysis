@@ -26,7 +26,6 @@
 .navs {
   /* background-color: cyan; */
   /* box-shadow: 2px; */
-  box-shadow: 10px 10px 5px lightblue;
 }
 
 .dropdowns {
@@ -36,4 +35,8 @@
 }
 .dropdown {
   margin-right: 1vw;
+}
+
+.img {
+  padding-left: 3;
 }

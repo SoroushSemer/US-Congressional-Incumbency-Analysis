@@ -34,29 +34,30 @@
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
       "color": "cyan"
+    },
+    {
+      "name": "Republican Favored Generated Plan",
+      "arizona": "arizona_district2010.json",
+      "louisiana": "louisiana_district2010.json",
+      "maryland": "maryland_district2010.json",
+      "color": "cyan"
     }
   ],
   "Subtypes": [
     {
-      "name": "2020 Population Heat Map",
+      "name": "Incumbent",
       "arizona": "",
       "louisiana": "",
       "maryland": ""
     },
     {
-      "name": "2018 Election Vote",
+      "name": "Population Heat Map",
       "arizona": "",
       "louisiana": "",
       "maryland": ""
     },
     {
-      "name": "2022 Election Vote",
-      "arizona": "",
-      "louisiana": "",
-      "maryland": ""
-    },
-    {
-      "name": "2020 Majority Racial Demographic",
+      "name": "Election Vote",
       "arizona": "",
       "louisiana": "",
       "maryland": ""
