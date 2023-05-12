@@ -4,8 +4,7 @@
     Last Update Date: 02/16/2023
 */
 
-import { createContext, useContext, useState } from "react";
-import { alignPropType } from "react-bootstrap/esm/types";
+import { createContext, useState } from "react";
 import api from "./axios/api";
 export const GlobalStoreContext = createContext({});
 
@@ -21,6 +20,9 @@ function GlobalStoreContextProvider(props) {
     currentMapSubType: ["Incumbent"],
     states: null,
     currentEnsembleAnalysis: "election",
+    incumbent: null,
+    loading: false,
+    currentEnsemble: null,
   });
 
   //BEGINNNING OF STORE FUNCTIONS: TEMPLATE BELOW
@@ -30,14 +32,43 @@ function GlobalStoreContextProvider(props) {
         }
     */
 
+  store.getCurrentEnsemble = function () {
+    console.log("hello");
+    if (store.currentState == null) {
+      return null;
+    }
+    async function asyncGetEnsemble() {
+      const response = await api.getEnsemble(store.currentState.name);
+      if (response.status === 200) {
+        console.log(response.data);
+        for (const plot of Object.keys(response.data.plots)) {
+          var outliers = [];
+          var count = 0;
+          for (const coords of response.data.plots[plot][1].data) {
+            if (count === coords.x) {
+              outliers.push(coords);
+              count++;
+            }
+          }
+          response.data.plots[plot][1].data = outliers;
+        }
+        setStore({
+          ...store,
+          currentEnsemble: response.data,
+        });
+      }
+    }
+    asyncGetEnsemble();
+  };
   store.setCurrentState = function (state) {
+    setStore({ ...store, loading: true });
     for (const map of store.currentMaps) {
       async function asyncGetGeoJSON() {
         // console.log(state.name, map);
         const response = await api.getMap(state, map);
         // const response = await api.getHello();
         console.log(response);
-        if (response.status == 200) {
+        if (response.status === 200) {
           let geojson = response.data;
           console.log(response);
           var currentMapGeoJSONs = store.currentMapGeoJSONs;
@@ -47,6 +78,7 @@ function GlobalStoreContextProvider(props) {
             ...store,
             currentDistrict: null,
             currentMapGeoJSONs: currentMapGeoJSONs,
+            loading: false,
           });
 
           async function asyncGetState() {
@@ -54,7 +86,7 @@ function GlobalStoreContextProvider(props) {
             const response = await api.getState(state);
             // const response = await api.getHello();
             console.log(response);
-            if (response.status == 200) {
+            if (response.status === 200) {
               setStore({
                 ...store,
                 currentState: response.data,
@@ -70,7 +102,7 @@ function GlobalStoreContextProvider(props) {
   };
 
   store.setCurrentDistrict = function (district) {
-    if (district == store.currentDistrict) {
+    if (district === store.currentDistrict) {
       district = null;
     }
     setStore({
@@ -84,19 +116,60 @@ function GlobalStoreContextProvider(props) {
     if (store.currentDistrict == null || store.currentState == null) {
       return null;
     }
+    var incumbentInfo = null;
     for (const incumbent of store.currentState.incumbents) {
-      if (incumbent.name == store.currentDistrict) {
-        return incumbent;
+      if (incumbent.name === store.currentDistrict) {
+        incumbentInfo = { ...incumbent };
       }
     }
-    return null;
+    if (store.currentMapGeoJSONs.length > 0)
+      for (const district of store.currentMapGeoJSONs[0].features) {
+        if (district.properties.INCUMBENT === store.currentDistrict) {
+          incumbentInfo = { ...incumbentInfo, ...district.properties };
+        }
+      }
+    console.log(incumbentInfo);
+    return incumbentInfo;
   };
+
+  store.getPlanInfo = function () {
+    if (store.currentState == null || store.currentMapGeoJSONs.length === 0) {
+      return null;
+    }
+    var planInfo = {
+      name: store.currentMaps[0],
+      districts: 0,
+      rep: 0.0,
+      dem: 0.0,
+      incumbents: 0,
+      summary: store.currentMapGeoJSONs[0].summary,
+    };
+    for (const district of store.currentMapGeoJSONs[0].features) {
+      planInfo.districts++;
+      if (
+        parseInt(district.properties["REP Votes"]) >
+        parseInt(district.properties["DEM Votes"])
+      ) {
+        planInfo.rep += 1;
+      } else {
+        planInfo.dem += 1;
+      }
+      if (
+        district.properties["PARTY"] !== "N/A" &&
+        district.properties["INCUMBENT"] !== "0"
+      ) {
+        planInfo.incumbents++;
+      }
+    }
+    return planInfo;
+  };
+
   store.getIncumbent = function (district) {
     if (district == null || store.currentState == null) {
       return null;
     }
     for (const incumbent of store.currentState.incumbents) {
-      if (incumbent.name == district) {
+      if (incumbent.name === district) {
         return incumbent;
       }
     }
@@ -107,18 +180,27 @@ function GlobalStoreContextProvider(props) {
     var newArray = store.currentMaps;
     var newGeoJSONs = store.currentMapGeoJSONs;
     var index = newArray.indexOf(mapId);
+
     if (index < 0) {
       newArray.push(mapId);
+      setStore({
+        ...store,
+        currentDistrict: null,
+        currentMaps: newArray,
+        loading: true,
+      });
       async function asyncGetGeoJSON() {
         const response = await api.getMap(store.currentState.name, mapId);
-        if (response.status == 200) {
+        if (response.status === 200) {
           let geojson = response.data;
           console.log(response);
           newGeoJSONs.push(geojson);
           setStore({
             ...store,
+            currentDistrict: null,
             currentMaps: newArray,
             currentMapGeoJSONs: newGeoJSONs,
+            loading: false,
           });
         }
       }
@@ -137,7 +219,7 @@ function GlobalStoreContextProvider(props) {
     setStore({
       ...store,
       currentMaps: [],
-      currentMapSubType: [],
+      // currentMapSubType: ["Incumbent"],
       currentMapGeoJSONs: [],
     });
   };
@@ -159,7 +241,7 @@ function GlobalStoreContextProvider(props) {
   store.getMapGeoJSON = function (state, map) {
     async function asyncGetStates() {
       const response = await api.getMap(state, map);
-      if (response.status == 200) {
+      if (response.status === 200) {
         let states = response.data;
         // console.log(states);
         setStore({ ...store, states: states });

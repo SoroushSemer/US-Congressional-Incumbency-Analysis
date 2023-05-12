@@ -7,10 +7,12 @@ const api = axios.create({
 // api.use(cors());
 export const getMap = (state, map) => api.get(`/map/${state}/${map}`);
 export const getState = (state) => api.get(`/state/${state}`);
+export const getEnsemble = (state) => api.get(`/ensemble/${state}`);
 export const getHello = () => api.get(`/hello-world`);
 const apis = {
   getMap,
   getState,
+  getEnsemble,
   getHello,
 };
 

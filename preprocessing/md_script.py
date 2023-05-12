@@ -255,9 +255,9 @@ md_2022_precincts['DEM Votes'] = md_2022_precincts['DEM Votes'].astype(int)
 # print(md_2020_districts.head())
 # print(md_2022_districts.head())
 
-# md_2020_districts.to_file('md_2020_districts.json', driver="GeoJSON")
-# md_2022_districts.to_file('md_2022_districts.json', driver="GeoJSON")
+md_2020_districts.to_file('md_2020_districts.json', driver="GeoJSON")
+md_2022_districts.to_file('md_2022_districts.json', driver="GeoJSON")
 
-# md_2020_precincts.to_file('md_2020_precincts.json', driver="GeoJSON")
+md_2020_precincts.to_file('md_2020_precincts.json', driver="GeoJSON")
 # md_2022_precincts.to_file('md_2022_precincts.json', driver="GeoJSON")
 

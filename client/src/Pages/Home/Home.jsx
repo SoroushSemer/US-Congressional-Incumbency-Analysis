@@ -23,7 +23,7 @@ const Home = () => {
       <Header className="header" />
       {/* </Row> */}
       {/* <Row className=""> */}
-      <Row>
+      <Row className="m-3 mb-1">
         <MyMap />
         <SideBar />
       </Row>

@@ -1,6 +1,6 @@
 .leaflet-container {
   /* width: 50%; */
-  height: 88svh;
+  /* height: 100%; */
   width: 100%;
   background-color: darkslategray;
   color: darkslategray;
@@ -22,4 +22,8 @@
 
 .color-key-item p {
   margin-left: 10px;
+}
+
+.small {
+  height: 50vh;
 }

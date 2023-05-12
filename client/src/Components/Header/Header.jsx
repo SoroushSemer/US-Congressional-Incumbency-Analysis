@@ -5,15 +5,13 @@
 */
 import "./Header.css";
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { GlobalStoreContext } from "../../Context/store";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import { Checkbox } from "@mui/material";
-import Container from "react-bootstrap/esm/Container";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
-const states = require("../../states.json");
 
 const maps = require("../../Data/maps.json");
 
@@ -25,7 +23,7 @@ const Header = () => {
   const { store } = useContext(GlobalStoreContext);
 
   return (
-    <div className="p-2 pt-3  navs">
+    <div className="navs px-3 py-1 pt-2" style={{ backgroundColor: "#2c3e50" }}>
       <Row className="w-100">
         <Col xs={8} className="img w-80">
           <h3>
@@ -34,8 +32,9 @@ const Header = () => {
               height="60vh"
               style={{ borderRadius: "50%", cursor: "pointer" }}
               onClick={() => window.location.reload(false)}
+              alt="Pirates Logo"
             />
-            <span className="mx-3 inline">
+            <span className="mx-3 inline text-white">
               US Congressional Incumbent Analysis
             </span>
           </h3>

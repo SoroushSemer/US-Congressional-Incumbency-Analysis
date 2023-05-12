@@ -23,15 +23,12 @@
 .navbar ul li a:hover {
   color: #cccccc;
 } */
-.navs {
-  /* background-color: cyan; */
-  /* box-shadow: 2px; */
-}
 
 .dropdowns {
   display: flex;
   justify-content: flex-end;
   margin-top: 1vh;
+  margin-left: 3vw;
 }
 .dropdown {
   margin-right: 1vw;

@@ -14,11 +14,15 @@ public class State {
 
     private Object features;
     private String type;
+    private String color;
+    private String summary;
 
     public JSONObject getState(){ 
         JSONObject json = new JSONObject();
         json.put("type", type);
         json.put("features", features);
+        json.put("color", color);
+        json.put("summary", summary);
         return json;
     }
 

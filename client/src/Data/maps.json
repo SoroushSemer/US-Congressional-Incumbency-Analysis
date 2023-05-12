@@ -15,21 +15,21 @@
       "color": "black"
     },
     {
-      "name": "Generated Plan 1",
+      "name": "High Population Variation Generated Plan",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
       "color": "cyan"
     },
     {
-      "name": "Generated Plan 2",
+      "name": "High Geographic Variation Generated Plan",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
       "color": "cyan"
     },
     {
-      "name": "Generated Plan 3",
+      "name": "Democratic Favored Generated Plan",
       "arizona": "arizona_district2010.json",
       "louisiana": "louisiana_district2010.json",
       "maryland": "maryland_district2010.json",
@@ -44,6 +44,12 @@
     }
   ],
   "Subtypes": [
+    {
+      "name": "None",
+      "arizona": "",
+      "louisiana": "",
+      "maryland": ""
+    },
     {
       "name": "Incumbent",
       "arizona": "",

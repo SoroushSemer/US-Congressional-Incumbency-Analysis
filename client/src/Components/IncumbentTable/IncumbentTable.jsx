@@ -6,14 +6,14 @@
 
 import "./IncumbentTable.css";
 
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { GlobalStoreContext } from "../../Context/store";
-
 
 import React from "react";
 // DataGrid
-import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
+
 // import Table from "@mui/material/Table";
 // import TableBody from "@mui/material/TableBody";
 // import TableCell from "@mui/material/TableCell";
@@ -22,37 +22,119 @@ import { DataGrid } from '@mui/x-data-grid';
 // import TableRow from "@mui/material/TableRow";
 // import Paper from "@mui/material/Paper";
 
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+const columns = [
+  { field: "id", headerName: "id", width: 0 },
+  {
+    field: "district",
+    headerName: "District",
+    headerClassName: "super-app-theme--header",
+    width: 100,
+  },
+  {
+    field: "name",
+    headerName: "Incumbent Name",
+    headerClassName: "super-app-theme--header",
+    width: 250,
+  },
+  {
+    field: "party",
+    headerName: "Party",
+    headerClassName: "super-app-theme--header",
+    width: 150,
+  },
+  {
+    field: "electionResult",
+    headerName: "Election Result",
+    width: 110,
+  },
+  {
+    field: "election",
+    headerName: "Election Result",
+    headerClassName: "super-app-theme--header",
+    width: 150,
+    valueGetter: (params) => (params.row.electionResult ? "Win" : "Loss"),
+  },
+  {
+    field: "geoVar",
+    headerName: "Geographic Variation",
+    headerClassName: "super-app-theme--header",
+    description:
+      "Variation in the geographic area of the district from 2020 to 2022 = [(New - Old)/ (New + Old)]",
+    width: 200,
+  },
+  {
+    field: "populationVar",
+    headerName: "Population Variation (VAP)",
+    headerClassName: "super-app-theme--header",
+    description:
+      "Variation in the Voting Age Population of the district from 2020 to 2022 = [(New - Old)/ (New + Old)]",
+    width: 354,
+  },
 ];
 
 export default function IncumbentTable() {
   const { store } = useContext(GlobalStoreContext);
+
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    <Box
+      sx={{
+        height: "36vh",
+        width: "100%",
+        "& .super-app-theme--header": {
+          backgroundColor: "#AcBeD0",
+          fontWeight: "bold",
+        },
+        "& .Mui-selected": {
+          backgroundColor: "pink",
+          fontWeight: "bold",
+        },
+        ".MuiDataGrid-columnHeaderTitle": {
+          fontWeight: "bold",
+        },
+        ".Republican": {
+          backgroundColor: "rgba(255,0,0,0.4)",
+          borderRadius: "10px",
+        },
+        ".Democrat": {
+          backgroundColor: "rgba(0,100,255,0.4)",
+          borderRadius: "10px",
+        },
+      }}
+    >
+      {store && store.currentState ? (
+        <DataGrid
+          rowHeight={40}
+          rows={store.currentState.incumbents}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 8,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
+            columns: {
+              columnVisibilityModel: {
+                // Hide columns status and traderName, the other columns will remain visible
+                id: false,
+                electionResult: false,
+              },
+            },
+          }}
+          pageSizeOptions={[8]}
+          disableRowSelectionOnClick
+          getRowClassName={(params) =>
+            params.row.name === store.currentDistrict ? "Mui-selected" : ""
+          }
+          getCellClassName={(params) =>
+            params.value === "Republican" || params.value === "Democrat"
+              ? params.value
+              : ""
+          }
+          onRowClick={(params) => store.setCurrentDistrict(params.row.name)}
+        />
+      ) : (
+        <div />
+      )}
     </Box>
     // <TableContainer component={Paper}>
     //   <Table aria-label="simple table">

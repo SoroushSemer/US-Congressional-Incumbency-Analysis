@@ -2,26 +2,13 @@ import React, { useContext } from "react";
 import { GlobalStoreContext } from "../../Context/store";
 import { GeoJSON } from "react-leaflet";
 
-const states = require("../../states.json");
-
 const State = (props) => {
   const { store } = useContext(GlobalStoreContext);
-  const colors = [
-    "blue",
-    "red",
-    "yellow",
-    "cyan",
-    "purple",
-    "green",
-    "orange",
-    "black",
-  ];
-  var color_count = 0;
-  var color_mappings = {};
+
   return (
     <GeoJSON
       style={(feature) => {
-        var color = "gray";
+        var color = props.data.color;
         var fillOpacity = 0.75;
         var fillColor = "white";
         // console.log(store.currentDistrict);
@@ -29,15 +16,15 @@ const State = (props) => {
         if (
           store.currentState &&
           // store.currentState.name == props.state &&
-          store.currentDistrict == feature.properties.INCUMBENT
+          store.currentDistrict === feature.properties.INCUMBENT
         ) {
           fillOpacity = 1.0;
           color = "black";
         }
         if (
           feature.properties.PARTY &&
-          feature.properties.PARTY != "N/A" &&
-          feature.properties.INCUMBENT != "0"
+          feature.properties.PARTY !== "N/A" &&
+          feature.properties.INCUMBENT !== "0"
         ) {
           fillColor = feature.properties.COLOR;
         }
@@ -54,13 +41,12 @@ const State = (props) => {
         if (
           store &&
           store.currentMapSubType &&
-          store.currentMapSubType[0] == "Election Vote"
+          store.currentMapSubType[0] === "Election Vote"
         ) {
-          color = "gray";
           if (
             store.currentState &&
             // store.currentState.name == props.state &&
-            store.currentDistrict == feature.properties.INCUMBENT
+            store.currentDistrict === feature.properties.INCUMBENT
           ) {
             color = "black";
           }
@@ -76,20 +62,36 @@ const State = (props) => {
         if (
           store &&
           store.currentMapSubType &&
-          store.currentMapSubType[0] == "Population Heat Map"
+          store.currentMapSubType[0] === "None"
         ) {
-          color = "gray";
           if (
             store.currentState &&
             // store.currentState.name == props.state &&
-            store.currentDistrict == feature.properties.INCUMBENT
+            store.currentDistrict === feature.properties.INCUMBENT
           ) {
             color = "black";
           }
-          let scalar =
-            1.0 -
-            (parseFloat(feature.properties["Tot_2020_vap"]) - 550000) /
-              200000.0;
+          fillColor = "none";
+        }
+        if (
+          store &&
+          store.currentMapSubType &&
+          store.currentMapSubType[0] === "Population Heat Map"
+        ) {
+          if (
+            store.currentState &&
+            // store.currentState.name == props.state &&
+            store.currentDistrict === feature.properties.INCUMBENT
+          ) {
+            color = "black";
+          }
+          let pop = 0;
+          if (feature.properties["Tot_2020_vap"]) {
+            pop = feature.properties["Tot_2020_vap"];
+          } else {
+            pop = feature.properties["Tot_2022_vap"];
+          }
+          let scalar = 1.0 - (parseFloat(pop) - 500000) / 200000.0;
           let red = 0 * scalar;
           let green = 255 * scalar;
           let blue = 0 * scalar;
@@ -149,7 +151,7 @@ const State = (props) => {
 
         layer.bindTooltip(
           `<div><p>District: ${feature.properties.DISTRICT}</p><p>Incumbent: ${
-            feature.properties.INCUMBENT == "0"
+            feature.properties.INCUMBENT === "0"
               ? "NONE"
               : feature.properties.INCUMBENT +
                 " (" +
@@ -162,8 +164,8 @@ const State = (props) => {
               : "REP"
           }</p><p>Total Population (VAP): ${
             feature.properties["Tot_2020_vap"]
-              ? feature.properties["Tot_2020_vap"].toLocaleString("en-US")
-              : "N/A"
+              ? parseInt(feature.properties["Tot_2020_vap"]).toLocaleString()
+              : parseInt(feature.properties["Tot_2022_vap"]).toLocaleString()
           }</p>`,
           {
             // permanent: true,
