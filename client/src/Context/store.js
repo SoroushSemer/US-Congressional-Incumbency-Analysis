@@ -141,6 +141,9 @@ function GlobalStoreContextProvider(props) {
       districts: 0,
       rep: 0.0,
       dem: 0.0,
+      repSafe: 0,
+      demSafe: 0,
+      nonSafe: 0,
       incumbents: 0,
       summary: store.currentMapGeoJSONs[0].summary,
     };
@@ -159,6 +162,24 @@ function GlobalStoreContextProvider(props) {
         district.properties["INCUMBENT"] !== "0"
       ) {
         planInfo.incumbents++;
+      }
+      var total_pop = district.properties["Tot_2020_vap"];
+      if (!total_pop) {
+        total_pop = district.properties["Tot_2022_vap"];
+      }
+      console.log(total_pop);
+      if (
+        parseInt(district.properties["REP Votes"]) / parseInt(total_pop) >
+        0.35
+      ) {
+        planInfo.repSafe++;
+      } else if (
+        parseInt(district.properties["DEM Votes"]) / parseInt(total_pop) >
+        0.45
+      ) {
+        planInfo.demSafe++;
+      } else {
+        planInfo.nonSafe++;
       }
     }
     return planInfo;

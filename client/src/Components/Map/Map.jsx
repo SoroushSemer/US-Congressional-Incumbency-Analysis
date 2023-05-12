@@ -12,18 +12,9 @@ import Col from "react-bootstrap/Col";
 import State from "../State/State";
 import { GeoJSON } from "react-leaflet";
 import "leaflet-spin";
-
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import { Checkbox } from "@mui/material";
 // const arizonaGeoJSON = require("../../Data/gz_2010_us_500_11_5m.json");
 
-const maps = require("../../Data/maps.json");
 
-const MapTypes = maps.Maps.map((map) => map.name);
-
-const MapSubTypes = maps.Subtypes.map((subtype) => subtype.name);
-const states = require("../../states.json");
 const maryland = require("../../Data/maryland.json");
 const arizona = require("../../Data/arizona.json");
 const louisiana = require("../../Data/louisiana.json");

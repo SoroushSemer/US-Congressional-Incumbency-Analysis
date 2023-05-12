@@ -15,19 +15,9 @@ import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import ReactApexChart from "react-apexcharts";
 import Dropdown from "react-bootstrap/Dropdown";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { Checkbox } from "@mui/material";
-
-const boxw = require("../../Data/ensemble.json");
 
 const conversions = {
-  election: "Election Variation",
+  election: "Percentage of Republican Votes",
   popVar: "Population Variation (VAP)",
   whVar: "White Population Variation",
   hisVar: "Hispanic Population Variation",
@@ -37,7 +27,6 @@ const conversions = {
   paccVar: "Pacific Islander Population Variation",
   areaVar: "Geographic Area Variation",
 };
-
 
 const SideBar = () => {
   const { store } = useContext(GlobalStoreContext);
@@ -89,12 +78,39 @@ const SideBar = () => {
       max: 1, // Sets the maximum value of the y-axis
       step: 0.25, // Sets the step size between ticks on the y-axis
       decimalsInFloat: 2,
-      title:{
-        text: conversions[store.currentEnsembleAnalysis]
-      }
+      title: {
+        text: conversions[store.currentEnsembleAnalysis],
+      },
     },
   };
   var incumbent = store.getCurrentIncumbent();
+
+  var totalGeo = 0;
+  var totalPop = 0;
+  var totalRep = 0;
+  var num = 0;
+  var avgGeo = 0;
+  var avgPop = 0;
+  var avgRep = 0;
+  if (store && store.currentEnsemble) {
+    for (const district of store.currentEnsemble.plots["popVar"][0].data) {
+      totalPop += district.y[2];
+      num += 1;
+    }
+    for (const district of store.currentEnsemble.plots["areaVar"][0].data) {
+      totalGeo += district.y[2];
+    }
+    for (const district of store.currentEnsemble.plots["election"][0].data) {
+      totalRep += district.y[2];
+    }
+    avgGeo = totalGeo / num;
+    avgPop = totalPop / num;
+    avgRep = totalRep / num;
+  }
+  var planInfo = null;
+  if (store && store.currentState) {
+    planInfo = store.getPlanInfo();
+  }
   return (
     // <aside class="sidebar">
     <Col xs={store && store.currentState ? 7 : 0}>
@@ -240,7 +256,53 @@ const SideBar = () => {
                   </Tab>
                 </Tabs>
               ) : (
-                <div />
+                <div>
+                  <h4 className="mt-3 text-center">Seat Analysis</h4>
+                  {store && planInfo ? (
+                    <Chart
+                      options={{
+                        chart: {
+                          id: "basic-bar",
+                        },
+                        bar: {
+                          horizontal: true,
+                        },
+                        fill: {
+                          colors: ["#0000FF", "#FF0000", "#00FF00"],
+                        },
+                        xaxis: {
+                          categories: [
+                            "Democratic Safe Seats vs. Republican Safe Seats vs. Non Safe Seats",
+                            "Open Seats vs. Incumbent Seats",
+                            "Democratic vs. Republican",
+                          ],
+                        },
+                      }}
+                      series={[
+                        {
+                          data: [
+                            planInfo.demSafe,
+                            planInfo.districts - planInfo.incumbents,
+                            planInfo.dem,
+                          ],
+                        },
+                        {
+                          data: [
+                            planInfo.repSafe,
+                            planInfo.incumbents,
+                            planInfo.rep,
+                          ],
+                        },
+                        { data: [planInfo.nonSafe] },
+                      ]}
+                      type="bar"
+                      width={"100%"}
+                      height={"350px"}
+                    />
+                  ) : (
+                    <div />
+                  )}{" "}
+                </div>
               )}
             </Tab>
 
@@ -252,10 +314,19 @@ const SideBar = () => {
                     <strong>Ensemble Size: </strong> 10,000 District Plans
                   </li>
                   <li>
-                    <strong>Average Geographic Variation: </strong>
+                    <strong>Plan Resolution: </strong> 10,000 Steps
                   </li>
                   <li>
-                    <strong>Average Voting Age Population Variation: </strong>
+                    <strong>Average Geographic Variation: </strong>{" "}
+                    {avgGeo.toFixed(3)}
+                  </li>
+                  <li>
+                    <strong>Average Voting Age Population Variation: </strong>{" "}
+                    {avgPop.toFixed(3)}
+                  </li>
+                  <li>
+                    <strong>Average Percentage of Republican Votes: </strong>{" "}
+                    {avgRep.toFixed(3) * 100} %
                   </li>
                 </ul>
               </div>
@@ -275,7 +346,7 @@ const SideBar = () => {
                         store.setCurrentEnsembleAnalysis("election");
                       }}
                     >
-                      Election Variation
+                      Percentage of Republican Votes
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => {
