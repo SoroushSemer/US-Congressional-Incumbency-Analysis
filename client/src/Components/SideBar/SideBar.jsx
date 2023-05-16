@@ -38,11 +38,11 @@ const SideBar = () => {
       categories: [
         "Total VAP",
         "White",
-        "Asian",
+        "Hispanic",
         "Black",
         "Native American",
-        "Hispanic",
-        "Other",
+        "Asian",
+        "Pacific Islander",
       ],
     },
   };
@@ -130,7 +130,7 @@ const SideBar = () => {
               ) : (
                 <div />
               )}
-              {store && store.currentDistrict ? (
+              {store && store.currentDistrict && incumbent ? (
                 <Tabs
                   defaultActiveKey="contact"
                   id="uncontrolled-tab-example"
@@ -139,72 +139,82 @@ const SideBar = () => {
                   <Tab eventKey="contact" title="Summary">
                     <h5>{store.currentDistrict}</h5>
 
-                    <ul>
-                      <li>
-                        <strong>District: </strong>
-                        {incumbent.district}
-                      </li>
-                      <li>
-                        <strong>Party: </strong>
-                        {incumbent.party}
-                      </li>
-
-                      <li>
-                        <strong>Total Voting Age Population: </strong>
-                        {incumbent.Tot_2022_vap
-                          ? parseInt(incumbent.Tot_2022_vap).toLocaleString()
-                          : parseInt(incumbent.Tot_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>White Population: </strong>
-                        {incumbent.Wh_2022_vap
-                          ? parseInt(incumbent.Wh_2022_vap).toLocaleString()
-                          : parseInt(incumbent.Wh_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Hispanic Population: </strong>
-                        {incumbent.His_2022_vap
-                          ? parseInt(incumbent.His_2022_vap).toLocaleString()
-                          : parseInt(incumbent.His_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Black Population: </strong>
-                        {incumbent.BlC_2022_vap
-                          ? parseInt(incumbent.BlC_2022_vap).toLocaleString()
-                          : parseInt(incumbent.BlC_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Native American Population: </strong>
-                        {incumbent.NatC_2022_vap
-                          ? parseInt(incumbent.NatC_2022_vap).toLocaleString()
-                          : parseInt(incumbent.NatC_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Asian Population: </strong>
-                        {incumbent.AsnC_2022_vap
-                          ? parseInt(incumbent.AsnC_2022_vap).toLocaleString()
-                          : parseInt(incumbent.AsnC_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Pacific Islander Population: </strong>
-                        {incumbent.PacC_2022_vap
-                          ? parseInt(incumbent.PacC_2022_vap).toLocaleString()
-                          : parseInt(incumbent.PacC_2020_vap).toLocaleString()}
-                      </li>
-                      <li>
-                        <strong>Area: </strong>
-                        {(
-                          parseInt(incumbent.AREA) / 2.59e6
-                        ).toLocaleString()}{" "}
-                        sq. mi.
-                      </li>
-                      <li>
-                        <strong>Votes Recieved: </strong>
-                        {incumbent.PARTY === "REP"
-                          ? parseInt(incumbent["REP Votes"]).toLocaleString()
-                          : parseInt(incumbent["DEM Votes"]).toLocaleString()}
-                      </li>
-                    </ul>
+                    {incumbent.Tot_2022_vap !== undefined ||
+                    incumbent.Tot_2020_vap !== undefined ? (
+                      <ul>
+                        <li>
+                          <strong>District: </strong>
+                          {incumbent.district}
+                        </li>
+                        <li>
+                          <strong>Party: </strong>
+                          {incumbent.party}
+                        </li>
+                        <li>
+                          <strong>Total Voting Age Population: </strong>
+                          {incumbent.Tot_2022_vap
+                            ? parseInt(incumbent.Tot_2022_vap).toLocaleString()
+                            : parseInt(incumbent.Tot_2020_vap).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>White Population: </strong>
+                          {incumbent.Wh_2022_vap
+                            ? parseInt(incumbent.Wh_2022_vap).toLocaleString()
+                            : parseInt(incumbent.Wh_2020_vap).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Hispanic Population: </strong>
+                          {incumbent.His_2022_vap
+                            ? parseInt(incumbent.His_2022_vap).toLocaleString()
+                            : parseInt(incumbent.His_2020_vap).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Black Population: </strong>
+                          {incumbent.BlC_2022_vap
+                            ? parseInt(incumbent.BlC_2022_vap).toLocaleString()
+                            : parseInt(incumbent.BlC_2020_vap).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Native American Population: </strong>
+                          {incumbent.NatC_2022_vap
+                            ? parseInt(incumbent.NatC_2022_vap).toLocaleString()
+                            : parseInt(
+                                incumbent.NatC_2020_vap
+                              ).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Asian Population: </strong>
+                          {incumbent.AsnC_2022_vap
+                            ? parseInt(incumbent.AsnC_2022_vap).toLocaleString()
+                            : parseInt(
+                                incumbent.AsnC_2020_vap
+                              ).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Pacific Islander Population: </strong>
+                          {incumbent.PacC_2022_vap
+                            ? parseInt(incumbent.PacC_2022_vap).toLocaleString()
+                            : parseInt(
+                                incumbent.PacC_2020_vap
+                              ).toLocaleString()}
+                        </li>
+                        <li>
+                          <strong>Area: </strong>
+                          {(
+                            parseInt(incumbent.AREA) / 2.59e6
+                          ).toLocaleString()}{" "}
+                          sq. mi.
+                        </li>
+                        <li>
+                          <strong>Votes Recieved: </strong>
+                          {incumbent.PARTY === "REP"
+                            ? parseInt(incumbent["REP Votes"]).toLocaleString()
+                            : parseInt(incumbent["DEM Votes"]).toLocaleString()}
+                        </li>
+                      </ul>
+                    ) : (
+                      <p>Not an Incumbent in this District Plan</p>
+                    )}
                   </Tab>
                   {/* <Tab eventKey="home" title="Geographic Variation">
                     <div>
@@ -259,7 +269,8 @@ const SideBar = () => {
                 <div>
                   <h4 className="mt-3 text-center">Seat Analysis</h4>
                   {store && planInfo ? (
-                    <Chart
+                    <div className="d-flex w-100">
+                      {/* <Chart
                       options={{
                         chart: {
                           id: "basic-bar",
@@ -298,7 +309,109 @@ const SideBar = () => {
                       type="bar"
                       width={"100%"}
                       height={"350px"}
-                    />
+                    /> */}
+                      <Chart
+                        options={{
+                          chart: {
+                            id: "basic-bar",
+                          },
+                          bar: {
+                            horizontal: true,
+                          },
+                          fill: {
+                            colors: ["#0000FF", "#FF0000", "#00FF00"],
+                          },
+                          xaxis: {
+                            categories: ["Safe Seats"],
+                          },
+                          yaxis: {
+                            show: false,
+                          },
+                        }}
+                        series={[
+                          {
+                            name: "Republican",
+                            color: "#ff0000",
+                            data: [planInfo.repSafe],
+                          },
+                          {
+                            name: "Democratic",
+                            color: "#0000ff",
+                            data: [planInfo.demSafe],
+                          },
+                          {
+                            name: "Non-Safe",
+                            color: "#00dd00",
+                            data: [planInfo.nonSafe],
+                          },
+                        ]}
+                        type="bar"
+                        width={"400px"}
+                        height={"350px"}
+                      />
+                      <Chart
+                        options={{
+                          chart: {
+                            id: "basic-bar",
+                          },
+                          bar: {
+                            horizontal: true,
+                          },
+                          xaxis: {
+                            categories: ["Open vs. Incumbent Seats"],
+                          },
+                          yaxis: {
+                            show: false,
+                          },
+                        }}
+                        series={[
+                          {
+                            name: "Open",
+                            color: "#ff00ff",
+                            data: [planInfo.districts - planInfo.incumbents],
+                          },
+                          {
+                            name: "Incumbent",
+                            color: "#00aaaa",
+                            data: [planInfo.incumbents],
+                          },
+                        ]}
+                        type="bar"
+                        width={"400px"}
+                        height={"350px"}
+                      />
+                      <Chart
+                        options={{
+                          chart: {
+                            id: "basic-bar",
+                          },
+                          bar: {
+                            horizontal: true,
+                          },
+                          xaxis: {
+                            categories: ["Party Seats"],
+                          },
+                          yaxis: {
+                            show: false,
+                          },
+                        }}
+                        series={[
+                          {
+                            name: "Republican",
+                            color: "#ff0000",
+                            data: [planInfo.rep],
+                          },
+                          {
+                            name: "Democratic",
+                            color: "#0000ff",
+                            data: [planInfo.dem],
+                          },
+                        ]}
+                        type="bar"
+                        width={"400px"}
+                        height={"350px"}
+                      />
+                    </div>
                   ) : (
                     <div />
                   )}{" "}

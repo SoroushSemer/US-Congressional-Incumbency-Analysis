@@ -61,8 +61,28 @@ function GlobalStoreContextProvider(props) {
     asyncGetEnsemble();
   };
   store.setCurrentState = function (state) {
-    setStore({ ...store, loading: true });
-    for (const map of store.currentMaps) {
+    if (state === null) {
+      setStore({
+        currentState: null,
+        currentDistrict: null,
+        currentMaps: ["2022 District Plan"],
+        currentMapGeoJSONs: [],
+        currentMapSubType: ["Incumbent"],
+        states: null,
+        currentEnsembleAnalysis: "election",
+        incumbent: null,
+        loading: false,
+        currentEnsemble: null,
+      });
+      return;
+    }
+    setStore({
+      ...store,
+      loading: true,
+      currentMapGeoJSONs: [],
+      currentMaps: ["2022 District Plan"],
+    });
+    for (const map of ["2022 District Plan"]) {
       async function asyncGetGeoJSON() {
         // console.log(state.name, map);
         const response = await api.getMap(state, map);
@@ -71,7 +91,7 @@ function GlobalStoreContextProvider(props) {
         if (response.status === 200) {
           let geojson = response.data;
           console.log(response);
-          var currentMapGeoJSONs = store.currentMapGeoJSONs;
+          var currentMapGeoJSONs = [];
           currentMapGeoJSONs.push(geojson);
 
           setStore({
@@ -90,6 +110,8 @@ function GlobalStoreContextProvider(props) {
               setStore({
                 ...store,
                 currentState: response.data,
+                currentMapGeoJSONs: currentMapGeoJSONs,
+                currentMaps: ["2022 District Plan"],
               });
             }
             // console.log(store);
@@ -137,6 +159,7 @@ function GlobalStoreContextProvider(props) {
       return null;
     }
     var planInfo = {
+      state: store.currentState,
       name: store.currentMaps[0],
       districts: 0,
       rep: 0.0,
@@ -150,12 +173,12 @@ function GlobalStoreContextProvider(props) {
     for (const district of store.currentMapGeoJSONs[0].features) {
       planInfo.districts++;
       if (
-        parseInt(district.properties["REP Votes"]) >
+        parseInt(district.properties["REP Votes"]) <
         parseInt(district.properties["DEM Votes"])
       ) {
-        planInfo.rep += 1;
-      } else {
         planInfo.dem += 1;
+      } else {
+        planInfo.rep += 1;
       }
       if (
         district.properties["PARTY"] !== "N/A" &&
@@ -206,7 +229,6 @@ function GlobalStoreContextProvider(props) {
       newArray.push(mapId);
       setStore({
         ...store,
-        currentDistrict: null,
         currentMaps: newArray,
         loading: true,
       });
@@ -218,7 +240,6 @@ function GlobalStoreContextProvider(props) {
           newGeoJSONs.push(geojson);
           setStore({
             ...store,
-            currentDistrict: null,
             currentMaps: newArray,
             currentMapGeoJSONs: newGeoJSONs,
             loading: false,
@@ -237,12 +258,13 @@ function GlobalStoreContextProvider(props) {
     }
   };
   store.clearMaps = function () {
-    setStore({
-      ...store,
-      currentMaps: [],
-      // currentMapSubType: ["Incumbent"],
-      currentMapGeoJSONs: [],
-    });
+    store.setCurrentState(store.currentState.name);
+    // setStore({
+    //   ...store,
+    //   currentMaps: [],
+    //   // currentMapSubType: ["Incumbent"],
+    //   currentMapGeoJSONs: [],
+    // });
   };
   store.getMap = function (mapId) {
     var index = store.currentMaps.indexOf(mapId);

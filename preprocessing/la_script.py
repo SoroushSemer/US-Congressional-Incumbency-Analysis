@@ -307,6 +307,12 @@ la_2020_precincts['DEM Votes'] = la_2020_precincts['DEM Votes'].astype(int)
 la_2022_precincts['REP Votes'] = la_2022_precincts['REP Votes'].astype(int)
 la_2022_precincts['DEM Votes'] = la_2022_precincts['DEM Votes'].astype(int)
 
+
+la_2020_precincts['REP Votes'] = la_2020_precincts['REP Votes'].astype(int)
+la_2020_precincts['DEM Votes'] = la_2020_precincts['DEM Votes'].astype(int)
+la_2022_precincts['REP Votes'] = la_2022_precincts['REP Votes'].astype(int)
+la_2022_precincts['DEM Votes'] = la_2022_precincts['DEM Votes'].astype(int)
+
 print(la_2020_precincts.head())
 print(la_2022_precincts.head())
 

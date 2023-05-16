@@ -51,12 +51,12 @@ const State = (props) => {
             color = "black";
           }
           if (
-            parseInt(feature.properties["REP Votes"]) >
+            parseInt(feature.properties["REP Votes"]) <
             parseInt(feature.properties["DEM Votes"])
           ) {
-            fillColor = "red";
-          } else {
             fillColor = "blue";
+          } else {
+            fillColor = "red";
           }
         }
         if (

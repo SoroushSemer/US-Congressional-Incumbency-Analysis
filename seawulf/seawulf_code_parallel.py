@@ -16,13 +16,15 @@ import multiprocessing as mp
 import json
 import os.path
 
+import sys
+
 # from random import randint
 
 
-STEPS = 1000
-ENSEMBLE_SIZE = 10000
-FILENAME = "./Maryland/md_2020_precincts.json"
-CORES = 90 
+STEPS = 10
+ENSEMBLE_SIZE = 1000
+FILENAME = sys.argv[1]
+CORES = 4   
 
 
 
@@ -104,7 +106,7 @@ def export_plan(initial_partition, partition, precincts, description):
         precincts.loc[precincts['DISTRICT'] == i[0],"PARTY"] = incumbent_dist_map[i[0]][1]
         
     
-    #precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
+    precincts['NEIGHBORS'] = precincts['NEIGHBORS'].apply(lambda x: ", ".join(x))
 
     district = precincts.dissolve('DISTRICT')
     republican = partition['election'].counts('Republican')
@@ -132,7 +134,7 @@ def export_plan(initial_partition, partition, precincts, description):
     for i in partition['area'].items():
         district.loc[i[0],"AREA"] = i[1]
     
-    #del district['NEIGHBORS']
+    del district['NEIGHBORS']
     del district['GEOID20']
     del district['NAMELSAD20']
     del district['HOME_PRECINCT']
