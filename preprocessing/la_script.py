@@ -252,14 +252,20 @@ la_2022_districts = clean_districts(la_2022_districts, la_incumbent, la_2022_pre
 la_2020_precincts = la_2020_precincts.to_crs(4326)
 la_2022_precincts = la_2022_precincts.to_crs(4326)
 
+
+la_2020_precincts['REP Votes'] = la_2020_precincts['REP Votes'].astype(int)
+la_2020_precincts['DEM Votes'] = la_2020_precincts['DEM Votes'].astype(int)
+la_2022_precincts['REP Votes'] = la_2022_precincts['REP Votes'].astype(int)
+la_2022_precincts['DEM Votes'] = la_2022_precincts['DEM Votes'].astype(int)
+
 print(la_2020_precincts.head())
 print(la_2022_precincts.head())
 
 print(la_2020_districts)
 print(la_2022_districts)
 
-# la_2020_precincts.to_file('la_2020_complete.json', driver="GeoJSON")
+la_2020_precincts.to_file('la_2020_complete.json', driver="GeoJSON")
 # la_2022_precincts.to_file('la_2022_complete.json', driver="GeoJSON")
 
-# la_2020_districts.to_file('la_2020_districts.json', driver="GeoJSON")
-# la_2022_districts.to_file('la_2022_districts.json', driver="GeoJSON")
+la_2020_districts.to_file('la_2020_districts.json', driver="GeoJSON")
+la_2022_districts.to_file('la_2022_districts.json', driver="GeoJSON")

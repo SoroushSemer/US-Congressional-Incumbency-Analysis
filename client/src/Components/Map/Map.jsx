@@ -14,16 +14,20 @@ import { GeoJSON } from "react-leaflet";
 import "leaflet-spin";
 // const arizonaGeoJSON = require("../../Data/gz_2010_us_500_11_5m.json");
 
-
 const maryland = require("../../Data/maryland.json");
 const arizona = require("../../Data/arizona.json");
 const louisiana = require("../../Data/louisiana.json");
 
 const Map = () => {
   const { store } = useContext(GlobalStoreContext);
+  var planInfo = null;
+  if (store && store.currentState) {
+    planInfo = store.getPlanInfo();
+  }
+
   //   const map = useMap();
-  var coords = [37, -95];
-  var zoom = 4.8;
+  var coords = [38, -95];
+  var zoom = 5.2;
   if (store && store.currentState) {
     coords = store.currentState.coords;
     zoom = store.currentState.zoom;
@@ -45,10 +49,6 @@ const Map = () => {
   }
 
   function MyMap() {
-    var planInfo = null;
-    if (store && store.currentState && store.currentMapGeoJSONs.length > 0) {
-      planInfo = store.getPlanInfo();
-    }
     return (
       <Col xs={store && store.currentState ? 5 : 12}>
         <h2 style={{ textAlign: "center" }} className="mx-5">
@@ -155,9 +155,7 @@ const Map = () => {
               </li>
               <li>
                 <strong>R/D Split: </strong>{" "}
-                {planInfo.dem !== 0
-                  ? (planInfo.rep / planInfo.dem).toFixed(2)
-                  : 0.0}
+                {planInfo.dem !== 0 ? planInfo.rep + "/" + planInfo.dem : 0.0}
               </li>
             </ul>
             <h5>Plan Summary</h5>

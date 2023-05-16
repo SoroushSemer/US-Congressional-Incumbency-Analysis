@@ -44,14 +44,14 @@ const columns = [
   },
   {
     field: "electionResult",
-    headerName: "Election Result",
+    headerName: "2022 Election Result",
     width: 110,
   },
   {
     field: "election",
-    headerName: "Election Result",
+    headerName: "2022 Election Result",
     headerClassName: "super-app-theme--header",
-    width: 150,
+    width: 200,
     valueGetter: (params) => (params.row.electionResult ? "Win" : "Loss"),
   },
   {
@@ -68,7 +68,7 @@ const columns = [
     headerClassName: "super-app-theme--header",
     description:
       "Variation in the Voting Age Population of the district from 2020 to 2022 = [(New - Old)/ (New + Old)]",
-    width: 354,
+    width: 304,
   },
 ];
 
