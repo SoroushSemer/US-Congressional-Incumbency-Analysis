@@ -193,12 +193,12 @@ function GlobalStoreContextProvider(props) {
       console.log(total_pop);
       if (
         parseInt(district.properties["REP Votes"]) / parseInt(total_pop) >
-        0.35
+        0.5
       ) {
         planInfo.repSafe++;
       } else if (
         parseInt(district.properties["DEM Votes"]) / parseInt(total_pop) >
-        0.45
+        0.5
       ) {
         planInfo.demSafe++;
       } else {

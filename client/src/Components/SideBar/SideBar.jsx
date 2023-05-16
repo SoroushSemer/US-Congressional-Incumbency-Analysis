@@ -319,10 +319,14 @@ const SideBar = () => {
                             horizontal: true,
                           },
                           fill: {
-                            colors: ["#0000FF", "#FF0000", "#00FF00"],
+                            colors: ["#2c3e50"],
                           },
                           xaxis: {
-                            categories: ["Safe Seats"],
+                            categories: [
+                              "Republican Safe",
+                              "Democratic Safe",
+                              "Non-Safe",
+                            ],
                           },
                           yaxis: {
                             show: false,
@@ -330,20 +334,27 @@ const SideBar = () => {
                         }}
                         series={[
                           {
-                            name: "Republican",
-                            color: "#ff0000",
-                            data: [planInfo.repSafe],
+                            data: [
+                              planInfo.repSafe,
+                              planInfo.demSafe,
+                              planInfo.nonSafe,
+                            ],
                           },
-                          {
-                            name: "Democratic",
-                            color: "#0000ff",
-                            data: [planInfo.demSafe],
-                          },
-                          {
-                            name: "Non-Safe",
-                            color: "#00dd00",
-                            data: [planInfo.nonSafe],
-                          },
+                          // {
+                          //   name: "Republican",
+                          //   color: "#ff0000",
+                          //   data: [planInfo.repSafe],
+                          // },
+                          // {
+                          //   name: "Democratic",
+                          //   color: "#0000ff",
+                          //   data: [planInfo.demSafe],
+                          // },
+                          // {
+                          //   name: "Non-Safe",
+                          //   color: "#d0d",
+                          //   data: [planInfo.nonSafe],
+                          // },
                         ]}
                         type="bar"
                         width={"400px"}
@@ -358,23 +369,32 @@ const SideBar = () => {
                             horizontal: true,
                           },
                           xaxis: {
-                            categories: ["Open vs. Incumbent Seats"],
+                            categories: ["Open Seats", "Incumbent Seats"],
                           },
                           yaxis: {
                             show: false,
                           },
+                          fill: {
+                            colors: ["#2c3e50"],
+                          },
                         }}
                         series={[
                           {
-                            name: "Open",
-                            color: "#ff00ff",
-                            data: [planInfo.districts - planInfo.incumbents],
+                            data: [
+                              planInfo.districts - planInfo.incumbents,
+                              planInfo.incumbents,
+                            ],
                           },
-                          {
-                            name: "Incumbent",
-                            color: "#00aaaa",
-                            data: [planInfo.incumbents],
-                          },
+                          // {
+                          //   name: "Open",
+                          //   color: "#d0d",
+                          //   data: [planInfo.districts - planInfo.incumbents],
+                          // },
+                          // {
+                          //   name: "Incumbent",
+                          //   color: "#00aaaa",
+                          //   data: [planInfo.incumbents],
+                          // },
                         ]}
                         type="bar"
                         width={"400px"}
@@ -389,23 +409,30 @@ const SideBar = () => {
                             horizontal: true,
                           },
                           xaxis: {
-                            categories: ["Party Seats"],
+                            categories: [
+                              "Republican Seats",
+                              "Democratic Seats",
+                            ],
                           },
                           yaxis: {
                             show: false,
                           },
+                          fill: {
+                            colors: ["#2c3e50"],
+                          },
                         }}
                         series={[
-                          {
-                            name: "Republican",
-                            color: "#ff0000",
-                            data: [planInfo.rep],
-                          },
-                          {
-                            name: "Democratic",
-                            color: "#0000ff",
-                            data: [planInfo.dem],
-                          },
+                          { data: [planInfo.rep, planInfo.dem] },
+                          // {
+                          //   name: "Republican",
+                          //   color: "#ff0000",
+                          //   data: [planInfo.rep],
+                          // },
+                          // {
+                          //   name: "Democratic",
+                          //   color: "#0000ff",
+                          //   data: [planInfo.dem],
+                          // },
                         ]}
                         type="bar"
                         width={"400px"}
@@ -427,7 +454,9 @@ const SideBar = () => {
                     <strong>Ensemble Size: </strong> 10,000 District Plans
                   </li>
                   <li>
-                    <strong>Plan Resolution: </strong> 10,000 Steps
+                    <strong>Plan Resolution: </strong>{" "}
+                    {store.currentState.name === "Maryland" ? "10,000" : "100"}{" "}
+                    Steps
                   </li>
                   <li>
                     <strong>Average Geographic Variation: </strong>{" "}

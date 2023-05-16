@@ -252,8 +252,8 @@ az_2022_precincts = az_2022_precincts.to_crs(4326)
 
 az_2020_precincts['REP Votes'] = az_2020_precincts['REP Votes'].astype(int)
 az_2020_precincts['DEM Votes'] = az_2020_precincts['DEM Votes'].astype(int)
-az_2022_precincts['REP Votes'] = az_2022_precincts['REP Votes'].astype(int)
-az_2022_precincts['DEM Votes'] = az_2022_precincts['DEM Votes'].astype(int)
+# az_2022_precincts['REP Votes'] = az_2022_precincts['REP Votes'].astype(int)
+# az_2022_precincts['DEM Votes'] = az_2022_precincts['DEM Votes'].astype(int)
 
 
 print(az_2020_precincts.head())
@@ -262,8 +262,8 @@ print(az_2022_precincts.head())
 print(az_2020_districts)
 print(az_2022_districts)
 
-az_2020_precincts.to_file('az_2020_complete.json', driver="GeoJSON")
-# az_2022_precincts.to_file('az_2022_complete.json', driver="GeoJSON")
+# az_2020_precincts.to_file('az_2020_complete.json', driver="GeoJSON")
+az_2022_precincts.to_file('az_2022_complete.json', driver="GeoJSON")
 
-az_2020_districts.to_file('az_2020_districts.json', driver="GeoJSON")
-az_2022_districts.to_file('az_2022_districts.json', driver="GeoJSON")
+# az_2020_districts.to_file('az_2020_districts.json', driver="GeoJSON")
+# az_2022_districts.to_file('az_2022_districts.json', driver="GeoJSON")

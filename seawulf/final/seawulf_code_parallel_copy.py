@@ -19,10 +19,11 @@ import os.path
 # from random import randint
 
 
-STEPS = 100
+STEPS = 10
 ENSEMBLE_SIZE = 10000
 # FILENAME = "./Maryland/md_2020_precincts.json"
-FILENAME = "./Arizona/az_2020_precincts.json"
+# FILENAME = "./Arizona/az_2020_precincts.json"
+FILENAME = "./Louisiana/la_2020_precincts.json"
 CORES = 4
 
 
@@ -87,7 +88,7 @@ pop_constraint = constraints.within_percent_of_ideal_population(initial_partitio
 
 def export_plan(initial_partition, partition, precincts, description):
     if(partition == None): return
-    if(os.path.isfile("./Arizona_GeneratedPlan_"+description+".json")): return
+    if(os.path.isfile("./Louisiana_GeneratedPlan_"+description+".json")): return
     temp = partition.graph
     incumbent_dist_map = {}
     for i, district in enumerate(initial_partition['population'].items()):
@@ -139,7 +140,7 @@ def export_plan(initial_partition, partition, precincts, description):
     del district['HOME_PRECINCT']
  
 
-    district.to_file("./Arizona_GeneratedPlan_"+description+".json")
+    district.to_file("./Louisiana_GeneratedPlan_"+description+".json")
     print("Generated", description)
 
 def boxplot(df):
@@ -237,13 +238,13 @@ def gen_plan(seed):
         if(partition['election'].seats('Republican')>5):
             export_plan(initial_partition, partition, precincts, "REP_Favored ("+str(partition['election'].seats('Republican'))+" wins)")       
     
-        elif(partition['election'].seats('Democratic')>6):
+        elif(partition['election'].seats('Democratic')>1):
             export_plan(initial_partition, partition, precincts, "DEM_Favored ("+str(partition['election'].seats('Democratic'))+" wins)")
     
-        if(max(var['popVar']) > 0.781):
+        if(max(var['popVar']) > 0.67):
             export_plan(initial_partition, partition, precincts, "High_Pop_Var ("+str(round(max(var['popVar']),2))+" max)")
     
-        if(max(var['areaVar']) > 0.997):
+        if(max(var['areaVar']) > 0.945):
             export_plan(initial_partition, partition, precincts, "High_Geo_Var ("+str(round(max(var['areaVar']),2))+" max)")
 
     return var, election
@@ -307,7 +308,7 @@ def run_recom():
         "areaVar":areaBoxplotData
     }
     print("Generated Ensemble Data")
-    with open('./ensemble.json', 'w') as f:
+    with open('./Louisiana_ensemble.json', 'w') as f:
         json.dump(ensembleData, f)
 
 
