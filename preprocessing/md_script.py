@@ -212,8 +212,35 @@ def calculate_variations(data_20, data_22):
     ''' 
     Need to calculate area of districts and precincts. 
     '''
-    
-    return
+   # Determine the set of all unique districts
+    districts = set(data_20['DISTRICT']).union(data_22['DISTRICT'])
+
+    variations = {}
+
+    for district in districts:
+        # Filter data by district
+        data_20_district = data_20[data_20['DISTRICT'] == district]
+        data_22_district = data_22[data_22['DISTRICT'] == district]
+
+        # Define the sets
+        G = set(data_20_district['GEOID20']) - set(data_22_district['VTD'])
+        B = set(data_22_district['VTD']) - set(data_20_district['GEOID20'])
+        GBG = set(data_22_district['VTD']).intersection(set(data_20_district['GEOID20']))
+        
+        # Calculate population difference
+        Pop_B = data_22_district.loc[data_22_district['VTD'].isin(B), 'Tot_2022_vap'].sum()
+        Pop_GB_G = data_20_district['Tot_2020_vap'].sum() + data_22_district.loc[data_22_district['VTD'].isin(B), 'Tot_2022_vap'].sum()  # Assuming 'data_22_district' is the 2022 district
+        pop_difference = Pop_B / Pop_GB_G
+
+        # Calculate area difference
+        Area_B = data_22_district.loc[data_22_district['VTD'].isin(B), 'AREA'].sum()
+        Area_GB_G = data_20_district['AREA'].sum() + Area_B # Assuming 'data_22_district' is the 2022 district
+        area_difference = Area_B / Area_GB_G
+
+        # Store the results for this district
+        variations[district] = {'pop_difference': pop_difference, 'area_difference': area_difference}
+
+    return variations
 
 ''' Create and generate 2020 and 2022 complete json '''
 md_2020_precincts = clean_table(md_2020_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])

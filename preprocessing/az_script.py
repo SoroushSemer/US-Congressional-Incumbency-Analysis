@@ -2,6 +2,10 @@ import geopandas as gpd
 import pandas as pd
 import maup
 import math
+import warnings
+from shapely.errors import ShapelyDeprecationWarning
+from shapely.geometry import Polygon
+warnings.filterwarnings("ignore", category=ShapelyDeprecationWarning)
 
 ''' CSV Files holding data for demographics and incumbency for each year '''
 az_demo_20 = pd.read_csv("./Arizona/2020/AZ2020_VAP for each race.csv")
@@ -218,10 +222,37 @@ def clean_districts(district, tab_incumbent, precs, p_id, demo_columns):
 
 def calculate_variations(data_20, data_22):
     ''' 
-    Need to calculate area of districts and precincts. 
+    Calculate percentage variations between two GeoDataFrames. 
     '''
-    
-    return
+# Determine the set of all unique districts
+    districts = set(data_20['DISTRICT']).union(data_22['DISTRICT'])
+
+    variations = {}
+
+    for district in districts:
+        # Filter data by district
+        data_20_district = data_20[data_20['DISTRICT'] == district]
+        data_22_district = data_22[data_22['DISTRICT'] == district]
+
+        # Define the sets
+        G = set(data_20_district['GEOID20']) - set(data_22_district['GEOID20'])
+        B = set(data_22_district['GEOID20']) - set(data_20_district['GEOID20'])
+        GBG = set(data_22_district['GEOID20']).intersection(set(data_20_district['GEOID20']))
+        
+        # Calculate population difference
+        Pop_B = data_22_district.loc[data_22_district['GEOID20'].isin(B), 'Tot_2022_vap'].sum()
+        Pop_GB_G = data_20_district['Tot_2020_vap'].sum() + data_22_district.loc[data_22_district['GEOID20'].isin(B), 'Tot_2022_vap'].sum()  # Assuming 'data_22_district' is the 2022 district
+        pop_difference = Pop_B / Pop_GB_G
+
+        # Calculate area difference
+        Area_B = data_22_district.loc[data_22_district['GEOID20'].isin(B), 'AREA'].sum()
+        Area_GB_G = data_20_district['AREA'].sum() + Area_B # Assuming 'data_22_district' is the 2022 district
+        area_difference = Area_B / Area_GB_G
+
+        # Store the results for this district
+        variations[district] = {'pop_difference': pop_difference, 'area_difference': area_difference}
+
+    return variations
 
 ''' Create and generate 2020 and 2022 complete json '''
 az_2020_precincts = clean_table(az_2020_precincts, ['GEOID20', 'NAMELSAD20', 'geometry'])
@@ -245,8 +276,16 @@ az_2022_districts['DISTRICT'] = '0' + az_2022_districts['DISTRICT'].astype(str)
 az_2020_districts = clean_districts(az_2020_districts, az_incumbent, az_2020_precincts, 'GEOID20', ['Tot_2020_vap', 'Wh_2020_vap', 'His_2020_vap', 'BlC_2020_vap', 'NatC_2020_vap', 'AsnC_2020_vap', 'PacC_2020_vap'])
 az_2022_districts = clean_districts(az_2022_districts, az_incumbent, az_2022_precincts, 'GEOID20', ['Tot_2022_vap', 'Wh_2022_vap', 'His_2022_vap', 'BlC_2022_vap', 'NatC_2022_vap', 'AsnC_2022_vap', 'PacC_2022_vap'])
 
+
 az_2020_precincts = az_2020_precincts.to_crs(4326)
 az_2022_precincts = az_2022_precincts.to_crs(4326)
+
+
+az_2020_precincts['REP Votes'] = az_2020_precincts['REP Votes'].astype(int)
+az_2020_precincts['DEM Votes'] = az_2020_precincts['DEM Votes'].astype(int)
+az_2022_precincts['REP Votes'] = az_2022_precincts['REP Votes'].astype(int)
+az_2022_precincts['DEM Votes'] = az_2022_precincts['DEM Votes'].astype(int)
+
 
 print(az_2020_precincts.head())
 print(az_2022_precincts.head())
@@ -254,8 +293,8 @@ print(az_2022_precincts.head())
 print(az_2020_districts)
 print(az_2022_districts)
 
-# az_2020_precincts.to_file('az_2020_complete.json', driver="GeoJSON")
+az_2020_precincts.to_file('az_2020_complete.json', driver="GeoJSON")
 # az_2022_precincts.to_file('az_2022_complete.json', driver="GeoJSON")
 
-# az_2020_districts.to_file('az_2020_districts.json', driver="GeoJSON")
-# az_2022_districts.to_file('az_2022_districts.json', driver="GeoJSON")
+az_2020_districts.to_file('az_2020_districts.json', driver="GeoJSON")
+az_2022_districts.to_file('az_2022_districts.json', driver="GeoJSON")
