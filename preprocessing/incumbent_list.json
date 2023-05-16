@@ -1,8 +1,8 @@
-{
-  "arizona": {
+[
+  {
     "name": "Arizona",
-    "coords": [34, -107],
-    "zoom": 6.5,
+    "coords": [31, -99],
+    "zoom": 6.75,
     "incumbents": [
       {
         "id": 0,
@@ -94,10 +94,10 @@
       }
     ]
   },
-  "louisiana": {
+  {
     "name": "Louisiana",
-    "coords": [31, -87.5],
-    "zoom": 7,
+    "coords": [29, -85],
+    "zoom": 7.5,
     "incumbents": [
       {
         "id": 0,
@@ -145,10 +145,10 @@
       }
     ]
   },
-  "maryland": {
+  {
     "name": "Maryland",
-    "coords": [39, -74.8],
-    "zoom": 7.5,
+    "coords": [38, -73.9],
+    "zoom": 8,
     "incumbents": [
       {
         "id": 0,
@@ -229,4 +229,4 @@
       }
     ]
   }
-}
+]

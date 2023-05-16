@@ -186,19 +186,17 @@ function GlobalStoreContextProvider(props) {
       ) {
         planInfo.incumbents++;
       }
-      var total_pop = district.properties["Tot_2020_vap"];
-      if (!total_pop) {
-        total_pop = district.properties["Tot_2022_vap"];
-      }
+      var total_pop =
+        parseInt(district.properties["REP Vote"]) +
+        parseInt(district.properties["DEM Vote"]);
       console.log(total_pop);
       if (
-        parseInt(district.properties["REP Votes"]) / parseInt(total_pop) >
-        0.5
+       ( parseInt(district.properties["REP Votes"]) - parseInt(district.properties['DEM Votes']))/parseInt(district.properties["REP Votes"]) > 0.1
       ) {
         planInfo.repSafe++;
       } else if (
-        parseInt(district.properties["DEM Votes"]) / parseInt(total_pop) >
-        0.5
+        (parseInt(district.properties["DEM Votes"]) - parseInt(district.properties['REP Votes']))/parseInt(district.properties["DEM Votes"]) >
+        0.1 
       ) {
         planInfo.demSafe++;
       } else {

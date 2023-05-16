@@ -95,7 +95,7 @@ export default function IncumbentTable() {
           backgroundColor: "rgba(255,0,0,0.4)",
           borderRadius: "10px",
         },
-        ".Democrat": {
+        ".Democratic": {
           backgroundColor: "rgba(0,100,255,0.4)",
           borderRadius: "10px",
         },
@@ -110,6 +110,9 @@ export default function IncumbentTable() {
             pagination: {
               paginationModel: {
                 pageSize: 8,
+              },
+              sorting: {
+                sortModel: [{ field: "district", sort: "desc" }],
               },
             },
             columns: {
@@ -126,7 +129,7 @@ export default function IncumbentTable() {
             params.row.name === store.currentDistrict ? "Mui-selected" : ""
           }
           getCellClassName={(params) =>
-            params.value === "Republican" || params.value === "Democrat"
+            params.value === "Republican" || params.value === "Democratic"
               ? params.value
               : ""
           }

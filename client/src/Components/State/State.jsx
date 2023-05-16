@@ -98,6 +98,31 @@ const State = (props) => {
           fillColor = `rgb(${red}, ${green}, ${blue})`;
           fillOpacity = 1;
         }
+        if (
+          store &&
+          store.currentMapSubType &&
+          store.currentMapSubType[0] === "Safe Seats"
+        ) {
+          if (
+            store.currentState &&
+            // store.currentState.name == props.state &&
+            store.currentDistrict === feature.properties.INCUMBENT
+          ) {
+            color = "black";
+          }
+          if (
+            ( parseInt(feature.properties["REP Votes"]) - parseInt(feature.properties['DEM Votes']))/parseInt(feature.properties["REP Votes"]) > 0.1
+           ) {
+             fillColor = 'red';
+           } else if (
+             (parseInt(feature.properties["DEM Votes"]) - parseInt(feature.properties['REP Votes']))/parseInt(feature.properties["DEM Votes"]) >
+             0.1 
+           ) {
+             fillColor = 'blue';
+           } else {
+             fillColor = 'green';
+           }
+        }
 
         // var fillColor;
         // fillColor = color_mappings[feature.properties.INCUMBENT];

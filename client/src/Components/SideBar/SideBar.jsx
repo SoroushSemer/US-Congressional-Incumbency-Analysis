@@ -211,6 +211,12 @@ const SideBar = () => {
                             ? parseInt(incumbent["REP Votes"]).toLocaleString()
                             : parseInt(incumbent["DEM Votes"]).toLocaleString()}
                         </li>
+                        <li>
+                          <strong>Opponent Votes Recieved: </strong>
+                          {incumbent.PARTY === "REP"
+                            ? parseInt(incumbent["DEM Votes"]).toLocaleString()
+                            : parseInt(incumbent["REP Votes"]).toLocaleString()}
+                        </li>
                       </ul>
                     ) : (
                       <p>Not an Incumbent in this District Plan</p>
