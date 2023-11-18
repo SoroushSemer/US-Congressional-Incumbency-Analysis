@@ -16,14 +16,15 @@ import multiprocessing as mp
 import json
 import os.path
 
+import save_data as sd
 # from random import randint
 
 
 STEPS = 10
-ENSEMBLE_SIZE = 10000
-# FILENAME = "./Maryland/md_2020_precincts.json"
+ENSEMBLE_SIZE = 100
+FILENAME = "./Maryland/md_2020_precincts.json"
 # FILENAME = "./Arizona/az_2020_precincts.json"
-FILENAME = "./Louisiana/la_2020_precincts.json"
+# FILENAME = "./Louisiana/la_2020_precincts.json"
 CORES = 4
 
 
@@ -140,7 +141,7 @@ def export_plan(initial_partition, partition, precincts, description):
     del district['HOME_PRECINCT']
  
 
-    district.to_file("./Louisiana_GeneratedPlan_"+description+".json")
+    district.to_file("./Maryland_NewGeneratedPlan_"+description+".json")
     print("Generated", description)
 
 def boxplot(df):
@@ -215,38 +216,45 @@ def calc_var(initial_partition, new_partition):
 
 
 
-def gen_plan(seed):
-    if (seed % 100 == 0): print(seed)
-    random.seed(seed)
-    chain = MarkovChain(
-            proposal=proposal,
-            constraints=[no_vanishing_districts, pop_constraint, compactness_bound],
-            accept=accept.always_accept,
-            initial_state=initial_partition,
-            total_steps=STEPS
-        )
-    count = 1
-    var = None
-    election = None
-    for partition in chain.with_progress_bar():
-        if(count < STEPS):
-            count+=1
-            continue
-        var = calc_var(initial_partition, partition)
-        election = sorted(partition['election'].percents('Republican'))
-        # partition.plot()
-        if(partition['election'].seats('Republican')>5):
-            export_plan(initial_partition, partition, precincts, "REP_Favored ("+str(partition['election'].seats('Republican'))+" wins)")       
+def gen_plan(process):
     
-        elif(partition['election'].seats('Democratic')>1):
-            export_plan(initial_partition, partition, precincts, "DEM_Favored ("+str(partition['election'].seats('Democratic'))+" wins)")
+    partitions = []
+    for seed in range(process * (ENSEMBLE_SIZE // CORES), (process+1) * (ENSEMBLE_SIZE // CORES)):
+        if (seed % 100 == 0): print(seed)
+        random.seed(seed)
+        chain = MarkovChain(
+                proposal=proposal,
+                constraints=[no_vanishing_districts, pop_constraint, compactness_bound],
+                accept=accept.always_accept,
+                initial_state=initial_partition,
+                total_steps=STEPS
+            )
+        count = 1
+        var = None
+        election = None
+        paritions_final = None
+        for partition in chain.with_progress_bar():
+            if(count < STEPS):
+                count+=1
+                continue
+            var = calc_var(initial_partition, partition)
+            election = sorted(partition['election'].percents('Republican'))
+            # partition.plot()
+            if(partition['election'].seats('Republican')>3):
+                export_plan(initial_partition, partition, precincts, "REP_Favored ("+str(partition['election'].seats('Republican'))+" wins)")       
+        
+            elif(partition['election'].seats('Democratic')>8):
+                export_plan(initial_partition, partition, precincts, "DEM_Favored ("+str(partition['election'].seats('Democratic'))+" wins)")
+        
+            if(max(var['popVar']) > 0.753):
+                export_plan(initial_partition, partition, precincts, "High_Pop_Var ("+str(round(max(var['popVar']),2))+" max)")
+        
+            if(max(var['areaVar']) > 0.955):
+                export_plan(initial_partition, partition, precincts, "High_Geo_Var ("+str(round(max(var['areaVar']),2))+" max)")
+            partition_final = partition
+        partitions.append(partition_final)
     
-        if(max(var['popVar']) > 0.67):
-            export_plan(initial_partition, partition, precincts, "High_Pop_Var ("+str(round(max(var['popVar']),2))+" max)")
-    
-        if(max(var['areaVar']) > 0.945):
-            export_plan(initial_partition, partition, precincts, "High_Geo_Var ("+str(round(max(var['areaVar']),2))+" max)")
-
+    sd.dump_run(f'./partitions/{process}.json', partitions)
     return var, election
     
 
@@ -257,7 +265,7 @@ def run_recom():
 
 
     p = mp.Pool(processes = CORES)
-    results = [p.apply_async(gen_plan, args =(seed,)) for seed in range(ENSEMBLE_SIZE)]
+    results = [p.apply_async(gen_plan, args =(process, )) for process in range(CORES)]
     for result in results:
         var, percRepublican = result.get()
         box_whiskers['election'].append(percRepublican)
@@ -308,7 +316,7 @@ def run_recom():
         "areaVar":areaBoxplotData
     }
     print("Generated Ensemble Data")
-    with open('./Louisiana_ensemble.json', 'w') as f:
+    with open('./Maryland_ensemble.json', 'w') as f:
         json.dump(ensembleData, f)
 
 
